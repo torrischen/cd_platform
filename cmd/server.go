@@ -3,6 +3,8 @@ package main
 import (
 	"cd_platform/controller"
 	"cd_platform/ext"
+	"net/http"
+	"sync"
 )
 
 func main() {
@@ -10,5 +12,8 @@ func main() {
 
 	e := controller.InitController()
 
-	e.Run(":8080")
+	wg := sync.WaitGroup{}
+	wg.Add(1)
+	go http.ListenAndServe(":8080", e)
+	wg.Wait()
 }

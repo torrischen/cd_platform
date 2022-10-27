@@ -3,6 +3,7 @@ package controller
 import "github.com/gin-gonic/gin"
 
 func InitController() *gin.Engine {
+	gin.SetMode(gin.ReleaseMode)
 	engine := gin.Default()
 
 	_ = NewBaseController()
