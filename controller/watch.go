@@ -47,3 +47,30 @@ func (ctrl *WatchController) GetDeploymentByLabel(c *gin.Context) {
 
 	ctrl.Jsonify(c, 200, ret, "")
 }
+
+func (ctrl *WatchController) GetPodByName(c *gin.Context) {
+	n := c.Param("name")
+	ns := c.Param("namespace")
+	ret, err := ctrl.WatchService.GetPodByName(c, ns, n)
+	if err != nil {
+		util.Logger.Errorf("controller.GetPodByName err: %s", err)
+		ctrl.Jsonify(c, 400, nil, err.Error())
+	}
+	ctrl.Jsonify(c, 200, ret, "")
+}
+
+func (ctrl *WatchController) GetPodByLabel(c *gin.Context) {
+	para := &api.SelectorCondList{}
+	if err := c.BindJSON(&para); err != nil {
+		util.Logger.Errorf("controller.GetPodByLabel err: %s", err)
+		ctrl.Jsonify(c, 400, nil, err.Error())
+	}
+
+	ret, err := ctrl.WatchService.GetPodByLabel(c, para)
+	if err != nil {
+		util.Logger.Errorf("controller.GetPodByLabel err: %s", err)
+		ctrl.Jsonify(c, 400, nil, err.Error())
+	}
+
+	ctrl.Jsonify(c, 200, ret, "")
+}
