@@ -31,17 +31,10 @@ func handleSignal() {
 
 	switch s {
 	case syscall.SIGQUIT:
-		clean()
-		os.Exit(-1)
+		os.Exit(1)
 	case syscall.SIGKILL:
-		clean()
-		os.Exit(-1)
-	case syscall.SIGTERM:
-		clean()
+		os.Exit(0)
+	default:
 		os.Exit(-1)
 	}
-}
-
-func clean() {
-
 }

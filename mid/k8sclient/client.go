@@ -3,7 +3,6 @@ package k8sclient
 import (
 	"cd_platform/conf"
 	"cd_platform/util"
-
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/client-go/dynamic"
 	"k8s.io/client-go/informers"

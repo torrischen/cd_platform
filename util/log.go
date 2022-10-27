@@ -20,17 +20,17 @@ func InitLogger() {
 }
 
 func (l *logger) Errorf(template string, args ...interface{}) {
-	l.l.Sugar().Errorf(template, args)
+	l.l.Sugar().Errorf(template, args...)
 }
 
 func (l *logger) Infof(template string, args ...interface{}) {
-	l.l.Sugar().Infof(template, args)
+	l.l.Sugar().Infof(template, args...)
 }
 
 func (l *logger) Warnf(template string, args ...interface{}) {
-	l.l.Sugar().Warnf(template, args)
+	l.l.Sugar().Warnf(template, args...)
 }
 
 func (l *logger) Fatalf(template string, args ...interface{}) {
-	l.l.Sugar().Fatalf(template, args)
+	l.l.Sugar().Fatalf(template, args...)
 }
