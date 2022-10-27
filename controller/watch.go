@@ -28,6 +28,7 @@ func (ctrl *WatchController) GetDeploymentByName(c *gin.Context) {
 	if err != nil {
 		util.Logger.Errorf("controller.GetDeploymentByName err: %s", err)
 		ctrl.Jsonify(c, 400, nil, err.Error())
+		return
 	}
 	ctrl.Jsonify(c, 200, ret, "")
 }
@@ -37,12 +38,14 @@ func (ctrl *WatchController) GetDeploymentByLabel(c *gin.Context) {
 	if err := c.BindJSON(&para); err != nil {
 		util.Logger.Errorf("controller.GetDeploymentByLabel err: %s", err)
 		ctrl.Jsonify(c, 400, nil, err.Error())
+		return
 	}
 
 	ret, err := ctrl.WatchService.GetDeploymentByLabel(c, para)
 	if err != nil {
 		util.Logger.Errorf("controller.GetDeploymentByLabel err: %s", err)
 		ctrl.Jsonify(c, 400, nil, err.Error())
+		return
 	}
 
 	ctrl.Jsonify(c, 200, ret, "")
@@ -55,6 +58,7 @@ func (ctrl *WatchController) GetPodByName(c *gin.Context) {
 	if err != nil {
 		util.Logger.Errorf("controller.GetPodByName err: %s", err)
 		ctrl.Jsonify(c, 400, nil, err.Error())
+		return
 	}
 	ctrl.Jsonify(c, 200, ret, "")
 }
@@ -64,12 +68,14 @@ func (ctrl *WatchController) GetPodByLabel(c *gin.Context) {
 	if err := c.BindJSON(&para); err != nil {
 		util.Logger.Errorf("controller.GetPodByLabel err: %s", err)
 		ctrl.Jsonify(c, 400, nil, err.Error())
+		return
 	}
 
 	ret, err := ctrl.WatchService.GetPodByLabel(c, para)
 	if err != nil {
 		util.Logger.Errorf("controller.GetPodByLabel err: %s", err)
 		ctrl.Jsonify(c, 400, nil, err.Error())
+		return
 	}
 
 	ctrl.Jsonify(c, 200, ret, "")

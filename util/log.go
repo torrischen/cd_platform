@@ -11,7 +11,7 @@ type logger struct {
 var Logger logger
 
 func InitLogger() {
-	log, err := zap.NewDevelopment()
+	log, err := zap.NewProduction()
 	if err != nil {
 		log.Fatal("Fail to init Logger!")
 	}

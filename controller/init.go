@@ -13,5 +13,9 @@ func InitController() *gin.Engine {
 	dep.GET("/get/:namespace/:name", watchController.GetDeploymentByName)
 	dep.POST("/getByLabel", watchController.GetDeploymentByLabel)
 
+	po := engine.Group("/pod")
+	po.GET("/get/:namespace/:name", watchController.GetPodByName)
+	po.POST("/getByLabel", watchController.GetPodByLabel)
+
 	return engine
 }
