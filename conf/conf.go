@@ -8,6 +8,7 @@ type Config struct {
 	MysqlUser  string
 	MysqlPass  string
 	MysqlDb    string
+	HarborAddr string
 }
 
 var Conf Config
@@ -18,6 +19,7 @@ func InitConf() {
 	flag.StringVar(&Conf.MysqlUser, "mysqluser", "root", "mysqluser")
 	flag.StringVar(&Conf.MysqlPass, "mysqlpass", "", "mysqlpass")
 	flag.StringVar(&Conf.MysqlDb, "mysqldb", "", "mysqldb")
+	flag.StringVar(&Conf.HarborAddr, "harboraddr", "", "harboraddr")
 
 	flag.Parse()
 }
