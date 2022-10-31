@@ -14,12 +14,12 @@ type Config struct {
 var Conf Config
 
 func InitConf() {
-	flag.StringVar(&Conf.KubecfgDir, "kubecfgdir", "./conf/kubecfg.yaml", "kubecfg")
-	flag.StringVar(&Conf.MysqlAddr, "mysqladdr", "", "mysqladdr")
-	flag.StringVar(&Conf.MysqlUser, "mysqluser", "root", "mysqluser")
-	flag.StringVar(&Conf.MysqlPass, "mysqlpass", "", "mysqlpass")
-	flag.StringVar(&Conf.MysqlDb, "mysqldb", "", "mysqldb")
-	flag.StringVar(&Conf.HarborAddr, "harboraddr", "", "harboraddr")
+	flag.StringVar(&Conf.KubecfgDir, "kubeConfigDir", "./conf/kubecfg.yaml", "kubecfg")
+	flag.StringVar(&Conf.MysqlAddr, "mysqlAddr", "", "mysqladdr")
+	flag.StringVar(&Conf.MysqlUser, "mysqlUser", "root", "mysqluser")
+	flag.StringVar(&Conf.MysqlPass, "mysqlPass", "", "mysqlpass")
+	flag.StringVar(&Conf.MysqlDb, "mysqlDbName", "", "mysqldb")
+	flag.StringVar(&Conf.HarborAddr, "harborAddr", "", "harboraddr")
 
 	flag.Parse()
 }

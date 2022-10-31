@@ -8,7 +8,6 @@ import (
 
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/labels"
-	"k8s.io/apimachinery/pkg/selection"
 )
 
 func (s *Service) GetPodByName(ctx context.Context, ns string, name string) (*corev1.Pod, error) {
@@ -21,17 +20,13 @@ func (s *Service) GetPodByName(ctx context.Context, ns string, name string) (*co
 }
 
 func (s *Service) GetPodByLabel(ctx context.Context, cond *common.SelectorCondList) ([]*corev1.Pod, error) {
-	selector := labels.NewSelector()
+	m := make(map[string]string)
 	for i := 0; i < len(cond.Cond); i++ {
-		r, err := labels.NewRequirement(cond.Cond[i].Key, selection.Operator(cond.Cond[i].Operation), cond.Cond[i].Value)
-		if err != nil {
-			util.Logger.Errorf("watch.GetPodByLabel err: %s", err)
-			continue
-		}
-		selector.Add(*r)
+		m[cond.Cond[i].Key] = cond.Cond[i].Value
 	}
+	slt := labels.SelectorFromSet(m)
 
-	ret, err := s.Mid.K8sclient.PodLister.List(selector)
+	ret, err := s.Mid.K8sclient.PodLister.List(slt)
 	if err != nil {
 		util.Logger.Errorf("watch.GetPodByLabel err: %s", err)
 		return nil, err

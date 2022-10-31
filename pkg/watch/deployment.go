@@ -8,7 +8,6 @@ import (
 
 	appsv1 "k8s.io/api/apps/v1"
 	"k8s.io/apimachinery/pkg/labels"
-	"k8s.io/apimachinery/pkg/selection"
 )
 
 func (s *Service) GetDeploymentByName(ctx context.Context, ns string, name string) (*appsv1.Deployment, error) {
@@ -21,17 +20,13 @@ func (s *Service) GetDeploymentByName(ctx context.Context, ns string, name strin
 }
 
 func (s *Service) GetDeploymentByLabel(ctx context.Context, cond *common.SelectorCondList) ([]*appsv1.Deployment, error) {
-	selector := labels.NewSelector()
+	m := make(map[string]string)
 	for i := 0; i < len(cond.Cond); i++ {
-		r, err := labels.NewRequirement(cond.Cond[i].Key, selection.Operator(cond.Cond[i].Operation), cond.Cond[i].Value)
-		if err != nil {
-			util.Logger.Errorf("watch.GetDeploymentByLabel err: %s", err)
-			continue
-		}
-		selector.Add(*r)
+		m[cond.Cond[i].Key] = cond.Cond[i].Value
 	}
+	slt := labels.SelectorFromSet(m)
 
-	ret, err := s.Mid.K8sclient.DeploymentLister.List(selector)
+	ret, err := s.Mid.K8sclient.DeploymentLister.List(slt)
 	if err != nil {
 		util.Logger.Errorf("watch.GetDeploymentByLabel err: %s", err)
 		return nil, err

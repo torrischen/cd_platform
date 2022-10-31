@@ -1,9 +1,8 @@
 package common
 
 type SelectorCond struct {
-	Key       string   `json:"key"`
-	Operation string   `json:"operation"`
-	Value     []string `json:"value"`
+	Key   string `json:"key"`
+	Value string `json:"value"`
 }
 
 type SelectorCondList struct {

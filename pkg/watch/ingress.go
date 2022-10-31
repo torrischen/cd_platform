@@ -8,7 +8,6 @@ import (
 
 	networkv1 "k8s.io/api/networking/v1"
 	"k8s.io/apimachinery/pkg/labels"
-	"k8s.io/apimachinery/pkg/selection"
 )
 
 func (s *Service) GetIngressByName(ctx context.Context, ns string, name string) (*networkv1.Ingress, error) {
@@ -21,17 +20,13 @@ func (s *Service) GetIngressByName(ctx context.Context, ns string, name string) 
 }
 
 func (s *Service) GetIngressByLabel(ctx context.Context, cond *common.SelectorCondList) ([]*networkv1.Ingress, error) {
-	selector := labels.NewSelector()
+	m := make(map[string]string)
 	for i := 0; i < len(cond.Cond); i++ {
-		r, err := labels.NewRequirement(cond.Cond[i].Key, selection.Operator(cond.Cond[i].Operation), cond.Cond[i].Value)
-		if err != nil {
-			util.Logger.Errorf("watch.GetIngressByLabel err: %s", err)
-			continue
-		}
-		selector.Add(*r)
+		m[cond.Cond[i].Key] = cond.Cond[i].Value
 	}
+	slt := labels.SelectorFromSet(m)
 
-	ret, err := s.Mid.K8sclient.IngressLister.List(selector)
+	ret, err := s.Mid.K8sclient.IngressLister.List(slt)
 	if err != nil {
 		util.Logger.Errorf("watch.GetIngressByLabel err: %s", err)
 		return nil, err
