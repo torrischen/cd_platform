@@ -16,3 +16,11 @@ func ByteToString(b []byte) string {
 func OwnerToNS(owner string) string {
 	return owner + "-" + "workspace"
 }
+
+func NameToDeploymentName(name string) string {
+	return name + "-" + "deployment"
+}
+
+func ProjectToDeployment(project string) string {
+	return project + "-" + "deployment"
+}

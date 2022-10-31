@@ -1,14 +1,12 @@
 package exec
 
 import (
-	"cd_platform/common"
 	"cd_platform/mid"
 	"context"
-	appsv1 "k8s.io/api/apps/v1"
 )
 
 type ExecService interface {
-	CreateDeployment(ctx context.Context, args *common.NewDeploymentArgs) (*appsv1.Deployment, error)
+	CreateDeployment(ctx context.Context, project string, raw []byte) error
 }
 
 type Service struct {
