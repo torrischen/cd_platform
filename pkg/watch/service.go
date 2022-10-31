@@ -1,7 +1,7 @@
 package watch
 
 import (
-	"cd_platform/api"
+	"cd_platform/common"
 	"cd_platform/util"
 
 	"context"
@@ -20,7 +20,7 @@ func (s *Service) GetServiceByName(ctx context.Context, ns string, name string) 
 	return ret, nil
 }
 
-func (s *Service) GetServiceByLabel(ctx context.Context, cond *api.SelectorCondList) ([]*corev1.Service, error) {
+func (s *Service) GetServiceByLabel(ctx context.Context, cond *common.SelectorCondList) ([]*corev1.Service, error) {
 	selector := labels.NewSelector()
 	for i := 0; i < len(cond.Cond); i++ {
 		r, err := labels.NewRequirement(cond.Cond[i].Key, selection.Operator(cond.Cond[i].Operation), cond.Cond[i].Value)

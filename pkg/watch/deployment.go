@@ -1,7 +1,7 @@
 package watch
 
 import (
-	"cd_platform/api"
+	"cd_platform/common"
 	"cd_platform/util"
 
 	"context"
@@ -20,7 +20,7 @@ func (s *Service) GetDeploymentByName(ctx context.Context, ns string, name strin
 	return ret, nil
 }
 
-func (s *Service) GetDeploymentByLabel(ctx context.Context, cond *api.SelectorCondList) ([]*appsv1.Deployment, error) {
+func (s *Service) GetDeploymentByLabel(ctx context.Context, cond *common.SelectorCondList) ([]*appsv1.Deployment, error) {
 	selector := labels.NewSelector()
 	for i := 0; i < len(cond.Cond); i++ {
 		r, err := labels.NewRequirement(cond.Cond[i].Key, selection.Operator(cond.Cond[i].Operation), cond.Cond[i].Value)

@@ -1,4 +1,4 @@
-package api
+package common
 
 type SelectorCond struct {
 	Key       string   `json:"key"`

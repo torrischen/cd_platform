@@ -12,3 +12,7 @@ func StringToByte(s string) []byte {
 func ByteToString(b []byte) string {
 	return *(*string)(unsafe.Pointer(&b))
 }
+
+func OwnerToNS(owner string) string {
+	return owner + "-" + "workspace"
+}

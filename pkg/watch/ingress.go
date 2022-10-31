@@ -1,7 +1,7 @@
 package watch
 
 import (
-	"cd_platform/api"
+	"cd_platform/common"
 	"cd_platform/util"
 
 	"context"
@@ -20,7 +20,7 @@ func (s *Service) GetIngressByName(ctx context.Context, ns string, name string) 
 	return ret, nil
 }
 
-func (s *Service) GetIngressByLabel(ctx context.Context, cond *api.SelectorCondList) ([]*networkv1.Ingress, error) {
+func (s *Service) GetIngressByLabel(ctx context.Context, cond *common.SelectorCondList) ([]*networkv1.Ingress, error) {
 	selector := labels.NewSelector()
 	for i := 0; i < len(cond.Cond); i++ {
 		r, err := labels.NewRequirement(cond.Cond[i].Key, selection.Operator(cond.Cond[i].Operation), cond.Cond[i].Value)

@@ -1,7 +1,7 @@
 package harbor
 
 import (
-	"cd_platform/api"
+	"cd_platform/common"
 	"cd_platform/conf"
 
 	"github.com/go-resty/resty/v2"
@@ -19,6 +19,6 @@ func Init(conf conf.Config) *Client {
 	}
 }
 
-func (c *Client) ListProject() *api.ProjectList {
+func (c *Client) ListProject() *common.ProjectList {
 	return nil
 }
