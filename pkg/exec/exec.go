@@ -7,6 +7,7 @@ import (
 
 type ExecService interface {
 	CreateDeployment(ctx context.Context, project string, raw []byte) error
+	CreateService(ctx context.Context, project string, raw []byte) error
 }
 
 type Service struct {
