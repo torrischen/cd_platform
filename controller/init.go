@@ -9,6 +9,7 @@ func InitController() *gin.Engine {
 	_ = NewBaseController()
 	watchController := NewWatchController()
 	execController := NewExecController()
+	sitController := NewSitController()
 
 	dep := engine.Group("/deployment")
 	dep.GET("/get/:namespace/:name", watchController.GetDeploymentByName)
@@ -30,6 +31,9 @@ func InitController() *gin.Engine {
 	igs := engine.Group("/ingress")
 	igs.GET("/get/:namespace/:name", watchController.GetIngressByName)
 	igs.POST("/getByLabel", watchController.GetIngressByLabel)
+
+	sit := engine.Group("/sit")
+	sit.POST("/deployment/create", sitController.CreateDeployment)
 
 	return engine
 }

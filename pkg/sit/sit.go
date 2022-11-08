@@ -1,10 +1,12 @@
-package person
+package sit
 
 import (
 	"cd_platform/mid"
+	"context"
 )
 
-type PersonService interface {
+type SitService interface {
+	CreateDeployment(ctx context.Context, project string, raw []byte) error
 }
 
 type Service struct {
