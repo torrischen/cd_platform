@@ -9,6 +9,7 @@ type ExecService interface {
 	CreateDeployment(ctx context.Context, project string, raw []byte) error
 	CreateService(ctx context.Context, project string, raw []byte) error
 	CreateStatefulset(ctx context.Context, project string, raw []byte) error
+	CreateNamespace(ctx context.Context, project string, raw []byte) error
 }
 
 type Service struct {

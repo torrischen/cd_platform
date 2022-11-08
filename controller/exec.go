@@ -37,3 +37,21 @@ func (ctrl *ExecController) CreateDeployment(c *gin.Context) {
 
 	ctrl.Jsonify(c, 200, nil, "success")
 }
+
+func (ctrl *ExecController) CreateNamespace(c *gin.Context) {
+	var args common.CreateArgs
+	if err := c.BindJSON(&args); err != nil {
+		util.Logger.Errorf("controller.CreateNamespace err: %s", err)
+		ctrl.Jsonify(c, 400, nil, err.Error())
+		return
+	}
+
+	err := ctrl.ExecService.CreateNamespace(c, args.Project, args.Metadata)
+	if err != nil {
+		util.Logger.Errorf("controller.CreateNamespace err: %s", err)
+		ctrl.Jsonify(c, 400, nil, err.Error())
+		return
+	}
+
+	ctrl.Jsonify(c, 200, nil, "success")
+}

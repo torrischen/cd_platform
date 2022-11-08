@@ -22,6 +22,7 @@ type WatchService interface {
 	GetServiceByLabel(ctx context.Context, cond *common.SelectorCondList) ([]*corev1.Service, error)
 	GetIngressByName(ctx context.Context, ns string, name string) (*networkv1.Ingress, error)
 	GetIngressByLabel(ctx context.Context, cond *common.SelectorCondList) ([]*networkv1.Ingress, error)
+	GetNamespaceByName(ctx context.Context, ns string) (*corev1.Namespace, error)
 }
 
 type Service struct {

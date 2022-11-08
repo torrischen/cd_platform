@@ -24,6 +24,7 @@ type Client struct {
 	PodLister         listercorev1.PodLister
 	ServiceLister     listercorev1.ServiceLister
 	IngressLister     listernetworkv1.IngressLister
+	NSLister          listercorev1.NamespaceLister
 }
 
 func Init(conf conf.Config) *Client {
@@ -47,6 +48,20 @@ func Init(conf conf.Config) *Client {
 	}
 
 	sharedIM := informers.NewSharedInformerFactory(clientset, 30*time.Minute)
+
+	sharedIM.Core().V1().Namespaces().Informer().AddEventHandler(cache.ResourceEventHandlerFuncs{
+		AddFunc: func(obj interface{}) {
+			util.Logger.Infof("New namespace added: %s", obj.(metav1.Object).GetName())
+		},
+		UpdateFunc: func(oldObj, newObj interface{}) {
+			oobj := oldObj.(metav1.Object)
+			nobj := newObj.(metav1.Object)
+			util.Logger.Infof("namespace update, %s has been updated to %s", oobj.GetName(), nobj.GetName())
+		},
+		DeleteFunc: func(obj interface{}) {
+			util.Logger.Infof("namespace deleted: %s", obj.(metav1.Object).GetName())
+		},
+	})
 
 	sharedIM.Apps().V1().Deployments().Informer().AddEventHandler(cache.ResourceEventHandlerFuncs{
 		AddFunc: func(obj interface{}) {
@@ -118,6 +133,7 @@ func Init(conf conf.Config) *Client {
 		},
 	})
 
+	nsLister := sharedIM.Core().V1().Namespaces().Lister()
 	depLister := sharedIM.Apps().V1().Deployments().Lister()
 	stsLister := sharedIM.Apps().V1().StatefulSets().Lister()
 	podLister := sharedIM.Core().V1().Pods().Lister()
@@ -127,6 +143,7 @@ func Init(conf conf.Config) *Client {
 	go sharedIM.Start(make(chan struct{}))
 
 	c.ClientSet = clientset
+	c.NSLister = nsLister
 	c.DynamicClient = dynamicClient
 	c.DeploymentLister = depLister
 	c.StatefulSetLister = stsLister

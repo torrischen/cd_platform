@@ -170,3 +170,14 @@ func (ctrl *WatchController) GetIngressByLabel(c *gin.Context) {
 
 	ctrl.Jsonify(c, 200, ret, "")
 }
+
+func (ctrl *WatchController) GetNamespaceByName(c *gin.Context) {
+	n := c.Param("name")
+	ret, err := ctrl.WatchService.GetNamespaceByName(c, n)
+	if err != nil {
+		util.Logger.Errorf("controller.GetNamespaceByName err: %s", err)
+		ctrl.Jsonify(c, 400, nil, err.Error())
+		return
+	}
+	ctrl.Jsonify(c, 200, ret, "")
+}

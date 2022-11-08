@@ -11,28 +11,34 @@ func InitController() *gin.Engine {
 	execController := NewExecController()
 	sitController := NewSitController()
 
-	dep := engine.Group("/deployment")
+	dft := engine.Group("/api")
+
+	ns := dft.Group("/namespace")
+	ns.GET("/get/:name", watchController.GetNamespaceByName)
+	ns.POST("/create", execController.CreateNamespace)
+
+	dep := dft.Group("/deployment")
 	dep.GET("/get/:namespace/:name", watchController.GetDeploymentByName)
 	dep.POST("/getByLabel", watchController.GetDeploymentByLabel)
 	dep.POST("/create", execController.CreateDeployment)
 
-	po := engine.Group("/pod")
+	po := dft.Group("/pod")
 	po.GET("/get/:namespace/:name", watchController.GetPodByName)
 	po.POST("/getByLabel", watchController.GetPodByLabel)
 
-	sts := engine.Group("/statefulset")
+	sts := dft.Group("/statefulset")
 	sts.GET("/get/:namespace/:name", watchController.GetStatefulsetByName)
 	sts.POST("/getByLabel", watchController.GetStatefulsetByLabel)
 
-	svc := engine.Group("/service")
+	svc := dft.Group("/service")
 	svc.GET("/get/:namespace/:name", watchController.GetServiceByName)
 	svc.POST("/getByLabel", watchController.GetServiceByLabel)
 
-	igs := engine.Group("/ingress")
+	igs := dft.Group("/ingress")
 	igs.GET("/get/:namespace/:name", watchController.GetIngressByName)
 	igs.POST("/getByLabel", watchController.GetIngressByLabel)
 
-	sit := engine.Group("/sit")
+	sit := dft.Group("/sit")
 	sit.POST("/deployment/create", sitController.CreateDeployment)
 
 	return engine
