@@ -19,7 +19,11 @@ func ByteToString(b []byte) string {
 }
 
 func ProjectToNS(project string) string {
-	return project + "-" + "workspace"
+	return project + "-workspace"
+}
+
+func ProjectToSitNS(project string) string {
+	return project + "-sit-workspace"
 }
 
 func RawJsonToUnstructured(raw []byte) (*unstructured.Unstructured, error) {
