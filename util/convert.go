@@ -22,8 +22,8 @@ func ProjectToNS(project string) string {
 	return project + "-workspace"
 }
 
-func ProjectToSitNS(project string) string {
-	return project + "-sit-workspace"
+func ProjectToSit(project string) string {
+	return project + "-sit"
 }
 
 func RawJsonToUnstructured(raw []byte) (*unstructured.Unstructured, error) {

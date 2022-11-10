@@ -2,19 +2,27 @@ package sit
 
 import (
 	"cd_platform/mid"
+	"cd_platform/pkg"
 	"context"
 )
 
 type SitService interface {
-	CreateDeployment(ctx context.Context, project string, raw []byte) error
+	CreateSitDeployment(ctx context.Context, project string, raw []byte) error
+	CreateSitService(ctx context.Context, project string, raw []byte) error
+	CreateSitStatefulset(ctx context.Context, project string, raw []byte) error
+	CreateSitNamespace(ctx context.Context, project string) error
+	DeleteSitDeployment(ctx context.Context, project string) error
+	DeleteSitService(ctx context.Context, project string) error
+	DeleteSitStatefulset(ctx context.Context, project string) error
+	DeleteSitNamespace(ctx context.Context, project string) error
 }
 
 type Service struct {
-	Mid *mid.Middle
+	Exec pkg.ExecService
 }
 
 func NewService(mid *mid.Middle) *Service {
 	return &Service{
-		Mid: mid,
+		Exec: pkg.ExService,
 	}
 }

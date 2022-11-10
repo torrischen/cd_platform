@@ -1,4 +1,4 @@
-package exec
+package pkg
 
 import (
 	"cd_platform/util"
@@ -21,6 +21,15 @@ func (s *Service) CreateStatefulset(ctx context.Context, project string, raw []b
 		Resource: "services",
 	}).Namespace(util.ProjectToNS(project)).Create(context.TODO(), uns, metav1.CreateOptions{}); err != nil {
 		util.Logger.Errorf("exec.CreateStatefulSet err: %s", err)
+		return err
+	}
+
+	return nil
+}
+
+func (s *Service) DeleteStatefulset(ctx context.Context, project string) error {
+	if err := s.Mid.K8sclient.ClientSet.AppsV1().StatefulSets(util.ProjectToNS(project)).Delete(context.TODO(), project, metav1.DeleteOptions{}); err != nil {
+		util.Logger.Errorf("exec.DeleteStatefulset err: %s", err)
 		return err
 	}
 

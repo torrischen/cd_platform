@@ -115,7 +115,7 @@ func Init(conf conf.Config) *Client {
 			util.Logger.Infof("service updated, %s has been updated to %s", oobj.GetName(), nobj.GetName())
 		},
 		DeleteFunc: func(obj interface{}) {
-			util.Logger.Infof("service deleted: %s", obj.(metav1.Object).GetName())
+			util.Logger.Infof("pkg deleted: %s", obj.(metav1.Object).GetName())
 		},
 	})
 
