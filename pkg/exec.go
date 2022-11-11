@@ -13,11 +13,13 @@ type ExecService interface {
 	CreateService(ctx context.Context, project string, raw []byte) error
 	CreateStatefulset(ctx context.Context, project string, raw []byte) error
 	CreateNamespace(ctx context.Context, project string) error
-	DeleteDeployment(ctx context.Context, project string) error
-	DeleteService(ctx context.Context, project string) error
-	DeleteStatefulset(ctx context.Context, project string) error
-	DeleteNamespace(ctx context.Context, project string) error
-	InsertIngressRule(ctx context.Context, rule *common.IngressRule) error
+	DeleteDeployment(ctx context.Context, project string, application string) error
+	DeleteService(ctx context.Context, project string, application string) error
+	DeleteStatefulset(ctx context.Context, project string, application string) error
+	//DeleteNamespace(ctx context.Context, project string) error
+	InsertIngressRule(ctx context.Context, project string, rule *common.IngressRule) error
+	DeleteIngressRule(ctx context.Context, project string, application string) error
+	UpdateDeployment(ctx context.Context, project string, application string, image string) error
 }
 
 type Service struct {

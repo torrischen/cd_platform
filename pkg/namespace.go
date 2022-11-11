@@ -14,7 +14,7 @@ func (s *Service) CreateNamespace(ctx context.Context, project string) error {
 		},
 	}
 
-	if _, err := s.Mid.K8sclient.ClientSet.CoreV1().Namespaces().Create(context.TODO(), newns, metav1.CreateOptions{}); err != nil {
+	if _, err := s.Mid.K8sclient.ClientSet.CoreV1().Namespaces().Create(ctx, newns, metav1.CreateOptions{}); err != nil {
 		util.Logger.Errorf("exec.CreateNamespace err: %s", err)
 		return err
 	}
@@ -23,7 +23,7 @@ func (s *Service) CreateNamespace(ctx context.Context, project string) error {
 }
 
 func (s *Service) DeleteNamespace(ctx context.Context, project string) error {
-	if err := s.Mid.K8sclient.ClientSet.CoreV1().Namespaces().Delete(context.TODO(), util.ProjectToNS(project), metav1.DeleteOptions{}); err != nil {
+	if err := s.Mid.K8sclient.ClientSet.CoreV1().Namespaces().Delete(ctx, util.ProjectToNS(project), metav1.DeleteOptions{}); err != nil {
 		util.Logger.Errorf("exec.DeleteNamespace err: %s", err)
 		return err
 	}

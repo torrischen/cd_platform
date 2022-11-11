@@ -78,7 +78,7 @@ func (c *Client) CreateProject(project string) error {
 		util.Logger.Errorf("harbor.CreateProject err: %s", err)
 		return err
 	}
-	if resp.StatusCode() != 200 {
+	if resp.StatusCode() != 201 {
 		util.Logger.Errorf("harbor.CreateProject err: %s", string(resp.Body()))
 		return errors.New(string(resp.Body()))
 	}

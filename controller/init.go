@@ -13,6 +13,8 @@ func InitController() *gin.Engine {
 	pc.POST("/init", projectController.InitProject)
 	pc.GET("/list", projectController.GetProjectList)
 	pc.GET("/:project/:repo/list", projectController.GetRepoList)
+	pc.POST("/application/create", projectController.CreateApplication)
+	pc.POST("/application/destroy", projectController.DestroyApplication)
 	pc.POST("/application/deploy", projectController.DeployApplication)
 
 	return engine
