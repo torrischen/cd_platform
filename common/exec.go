@@ -5,10 +5,13 @@ type InitProjectArgs struct {
 }
 
 type DeployProjectArgs struct {
-	DeploymentRaw []byte        `json:"deployment_raw"`
-	ServiceRaw    []byte        `json:"service_raw"`
-	IngressRules  []IngressRule `json:"ingress_rules"`
+	Project       string      `json:"project"`
+	DeploymentRaw []byte      `json:"deployment_raw"`
+	ServiceRaw    []byte      `json:"service_raw"`
+	IngressRule   IngressRule `json:"ingress_rule"`
 }
 
 type IngressRule struct {
+	Application string `json:"application"`
+	Port        int32  `json:"port"`
 }

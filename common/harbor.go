@@ -1,14 +1,31 @@
 package common
 
-type ProjectListArgs struct {
-}
-
-type ProjectList struct {
+type RepoItem struct {
+	Id           int    `json:"id"`
 	Name         string `json:"name"`
-	OwnerName    string `json:"owner_name"`
-	ProjectId    int    `json:"project_id"`
-	OwnerId      int    `json:"owner_id"`
 	CreationTime string `json:"creation_time"`
 	UpdateTime   string `json:"update_time"`
-	RepoCount    int    `json:"repo_count"`
+}
+
+type TagItem struct {
+	Name string `json:"name"`
+}
+
+type TagList struct {
+	Tags []*TagItem `json:"tags"`
+}
+
+type ImageList struct {
+	Data []string `json:"data"`
+}
+
+type CreateHarborProjectArgs struct {
+	ProjectName  string                       `json:"project_name"`
+	Metadata     *CreateHarborProjectMetadata `json:"metadata"`
+	StorageLimit int64                        `json:"storage_limit"`
+	RegistryId   *int                         `json:"registry_id"`
+}
+
+type CreateHarborProjectMetadata struct {
+	Public string `json:"public"`
 }

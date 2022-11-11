@@ -9,8 +9,11 @@ func InitController() *gin.Engine {
 	_ = NewBaseController()
 	projectController := NewProjectController()
 
-	pc := engine.Group("/project")
+	pc := engine.Group("/api/dev/project")
 	pc.POST("/init", projectController.InitProject)
+	pc.GET("/list", projectController.GetProjectList)
+	pc.GET("/:project/:repo/list", projectController.GetRepoList)
+	pc.POST("/application/deploy", projectController.DeployApplication)
 
 	return engine
 }

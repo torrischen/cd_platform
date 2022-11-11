@@ -1,6 +1,7 @@
 package mysql
 
 import (
+	"cd_platform/common"
 	"cd_platform/conf"
 	"cd_platform/util"
 	"fmt"
@@ -26,8 +27,33 @@ func Init(conf conf.Config) *Client {
 		util.Logger.Fatalf("Fail to init mysql: %s", err)
 		return nil
 	}
+	if err := db.AutoMigrate(&common.Projects{}); err != nil {
+		util.Logger.Fatalf("Fail to init mysql: %s", err)
+		return nil
+	}
 
 	c.Db = db
 
 	return c
+}
+
+func (c *Client) CreateProject(project string) error {
+	if err := c.Db.Create(&common.Projects{
+		Name: project,
+	}).Error; err != nil {
+		util.Logger.Errorf("mysql.CreateProject err: %s", err)
+		return err
+	}
+
+	return nil
+}
+
+func (c *Client) GetProjectList() ([]*common.Projects, error) {
+	var ret []*common.Projects
+	if err := c.Db.Model(&common.Projects{}).Find(&ret).Error; err != nil {
+		util.Logger.Errorf("mysql.GetProjectList err: %s", err)
+		return nil, err
+	}
+
+	return ret, nil
 }

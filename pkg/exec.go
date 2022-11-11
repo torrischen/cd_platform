@@ -1,6 +1,7 @@
 package pkg
 
 import (
+	"cd_platform/common"
 	"cd_platform/mid"
 	"context"
 )
@@ -16,6 +17,7 @@ type ExecService interface {
 	DeleteService(ctx context.Context, project string) error
 	DeleteStatefulset(ctx context.Context, project string) error
 	DeleteNamespace(ctx context.Context, project string) error
+	InsertIngressRule(ctx context.Context, rule *common.IngressRule) error
 }
 
 type Service struct {
