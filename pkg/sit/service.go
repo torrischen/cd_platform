@@ -9,6 +9,6 @@ func (s *Service) CreateSitService(ctx context.Context, project string, raw []by
 	return s.Exec.CreateService(ctx, util.ProjectToSit(project), raw)
 }
 
-func (s *Service) DeleteSitService(ctx context.Context, project string) error {
-	return s.Exec.DeleteService(ctx, util.ProjectToSit(project))
+func (s *Service) DeleteSitService(ctx context.Context, project string, application string) error {
+	return s.Exec.DeleteService(ctx, util.ProjectToSit(project), application)
 }

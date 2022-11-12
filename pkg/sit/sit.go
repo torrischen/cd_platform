@@ -11,9 +11,9 @@ type SitService interface {
 	CreateSitService(ctx context.Context, project string, raw []byte) error
 	CreateSitStatefulset(ctx context.Context, project string, raw []byte) error
 	CreateSitNamespace(ctx context.Context, project string) error
-	DeleteSitDeployment(ctx context.Context, project string) error
-	DeleteSitService(ctx context.Context, project string) error
-	DeleteSitStatefulset(ctx context.Context, project string) error
+	DeleteSitDeployment(ctx context.Context, project string, application string) error
+	DeleteSitService(ctx context.Context, project string, application string) error
+	DeleteSitStatefulset(ctx context.Context, project string, application string) error
 	DeleteSitNamespace(ctx context.Context, project string) error
 }
 
