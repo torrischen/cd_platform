@@ -5,27 +5,28 @@ import (
 	"cd_platform/conf"
 	"cd_platform/util"
 	"errors"
-	"github.com/google/uuid"
-
 	"github.com/go-resty/resty/v2"
 )
 
 type Client struct {
-	HarborClient *resty.Client
-	HarborAddr   string
+	NewHarborFunc func(conf conf.Config) *resty.Client
+	HarborAddr    string
+}
+
+func NewHarborFunc(conf conf.Config) *resty.Client {
+	return resty.New().SetBasicAuth(conf.HarborUser, conf.HarborPass)
 }
 
 func Init(conf conf.Config) *Client {
 	return &Client{
-		HarborClient: resty.New().SetBasicAuth(conf.HarborUser, conf.HarborPass),
-		HarborAddr:   conf.HarborAddr,
+		NewHarborFunc: NewHarborFunc,
+		HarborAddr:    conf.HarborAddr,
 	}
 }
 
 func (c *Client) ListRepo(project string) ([]*common.RepoItem, error) {
 	var repolist []*common.RepoItem
-	_, err := c.HarborClient.R().
-		SetHeader("X-Request-Id", uuid.New().String()).
+	_, err := c.NewHarborFunc(conf.Conf).R().
 		SetResult(&repolist).
 		Get(c.HarborAddr + "/projects" + "/" + project + "/repositories")
 	if err != nil {
@@ -38,8 +39,7 @@ func (c *Client) ListRepo(project string) ([]*common.RepoItem, error) {
 
 func (c *Client) GetRepoTag(project string, repo string) (*common.ImageList, error) {
 	var taglist []*common.TagList
-	_, err := c.HarborClient.R().
-		SetHeader("X-Request-Id", uuid.New().String()).
+	_, err := c.NewHarborFunc(conf.Conf).R().
 		SetHeader("X-Accept-Vulnerabilities", "application/vnd.scanner.adapter.vuln.report.harbor+json; version=1.0").
 		SetQueryParam("with_tag", "true").
 		SetResult(&taglist).
@@ -70,8 +70,7 @@ func (c *Client) CreateProject(project string) error {
 		RegistryId:   nil,
 	}
 
-	resp, err := c.HarborClient.R().
-		SetHeader("X-Request-Id", uuid.New().String()).
+	resp, err := c.NewHarborFunc(conf.Conf).R().
 		SetBody(args).
 		Post(c.HarborAddr + "/projects")
 	if err != nil {

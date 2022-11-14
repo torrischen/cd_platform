@@ -5,7 +5,6 @@ import (
 	"cd_platform/conf"
 	"cd_platform/util"
 	"fmt"
-
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 	"gorm.io/gorm/schema"
@@ -38,9 +37,9 @@ func Init(conf conf.Config) *Client {
 }
 
 func (c *Client) CreateProject(project string) error {
-	if err := c.Db.Create(&common.Projects{
-		Name: project,
-	}).Error; err != nil {
+	tmp := &common.Projects{}
+	tmp.Name = project
+	if err := c.Db.Create(tmp).Error; err != nil {
 		util.Logger.Errorf("mysql.CreateProject err: %s", err)
 		return err
 	}

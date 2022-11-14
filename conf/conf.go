@@ -23,7 +23,9 @@ func InitConf() {
 	flag.StringVar(&Conf.MysqlDb, "mysqlDbName", "cd", "mysqldb")
 	flag.StringVar(&Conf.HarborAddr, "harborAddr", "http://192.168.3.250/api/v2.0", "harboraddr")
 	flag.StringVar(&Conf.HarborUser, "harborUser", "admin", "harboruser")
+	//flag.StringVar(&Conf.HarborUser, "harborUser", "robot$cd", "harboruser")
 	flag.StringVar(&Conf.HarborPass, "harborPass", "123..COM", "harborpass")
+	//flag.StringVar(&Conf.HarborPass, "harborPass", "6FlWSYIITCh0OdoMjRxB3Rig9cM4WpTG", "harborpass")
 
 	flag.Parse()
 }
