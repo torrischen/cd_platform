@@ -4,18 +4,21 @@ import (
 	"cd_platform/common"
 	"cd_platform/ext"
 	"cd_platform/pkg"
+	"cd_platform/pkg/watch"
 	"cd_platform/util"
 	"github.com/gin-gonic/gin"
 )
 
 type ProjectController struct {
 	BaseController
-	ExecService pkg.ExecService
+	ExecService  pkg.ExecService
+	WatchService watch.WatchService
 }
 
 func NewProjectController() *ProjectController {
 	return &ProjectController{
-		ExecService: pkg.ExService,
+		ExecService:  pkg.ExService,
+		WatchService: watch.NewService(ext.MiddleWare),
 	}
 }
 
@@ -49,7 +52,14 @@ func (ctrl *ProjectController) InitProject(c *gin.Context) {
 }
 
 func (ctrl *ProjectController) GetProjectList(c *gin.Context) {
-	ret, err := ext.MiddleWare.MysqlClient.GetProjectList()
+	var args common.GetProjectListQueryArgs
+	if err := c.BindQuery(&args); err != nil {
+		util.Logger.Errorf("controller.GetProjectList page or pagesize err: %s", err)
+		ctrl.Jsonify(c, 400, struct{}{}, err.Error())
+		return
+	}
+
+	ret, err := ext.MiddleWare.MysqlClient.GetProjectList(args.Page, args.Pagesize)
 	if err != nil {
 		util.Logger.Errorf("controller.GetProjectList err: %s", err)
 		ctrl.Jsonify(c, 400, struct{}{}, err.Error())
@@ -146,4 +156,17 @@ func (ctrl *ProjectController) DeployApplication(c *gin.Context) {
 	}
 
 	ctrl.Jsonify(c, 200, struct{}{}, "success")
+}
+
+func (ctrl *ProjectController) GetApplicationDetails(c *gin.Context) {
+	project := c.Param("project")
+
+	ret, err := ctrl.WatchService.GetPodByProject(c, project)
+	if err != nil {
+		util.Logger.Errorf("controller.GetApplicationDetails err: %s", err)
+		ctrl.Jsonify(c, 400, struct{}{}, err.Error())
+		return
+	}
+
+	ctrl.Jsonify(c, 200, ret, "success")
 }

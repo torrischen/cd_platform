@@ -26,3 +26,24 @@ type DeployApplicationArgs struct {
 	Application string `json:"application"`
 	Image       string `json:"image"`
 }
+
+type CreateSitApplicationArgs struct {
+	Application   string      `json:"application"`
+	DeploymentRaw []byte      `json:"deployment_raw"`
+	ServiceRaw    []byte      `json:"service_raw"`
+	IngressRule   IngressRule `json:"ingress_rule"`
+}
+
+type DeploySitApplicationArgs struct {
+	Application string `json:"application"`
+	Image       string `json:"image"`
+}
+
+type DestroySitApplicationArgs struct {
+	Application string `json:"application"`
+}
+
+type GetProjectListQueryArgs struct {
+	Page     int `json:"page"`
+	Pagesize int `json:"pagesize"`
+}

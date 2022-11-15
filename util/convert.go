@@ -22,7 +22,7 @@ func ProjectToNS(project string) string {
 	return project + "-workspace"
 }
 
-func ProjectToSit(project string) string {
+func ToSit(project string) string {
 	return project + "-sit"
 }
 

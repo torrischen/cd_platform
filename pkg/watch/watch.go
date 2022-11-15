@@ -23,6 +23,8 @@ type WatchService interface {
 	GetIngressByName(ctx context.Context, ns string, name string) (*networkv1.Ingress, error)
 	GetIngressByLabel(ctx context.Context, cond *common.SelectorCondList) ([]*networkv1.Ingress, error)
 	GetNamespaceByName(ctx context.Context, ns string) (*corev1.Namespace, error)
+	GetPodByProject(ctx context.Context, project string) ([]*common.PodByApplication, error)
+	GetPodByApplication(ctx context.Context, application string) (*common.PodByApplication, error)
 }
 
 type Service struct {
