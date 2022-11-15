@@ -101,7 +101,7 @@ func (ctrl *SitController) DestroySitApplication(c *gin.Context) {
 
 func (ctrl *SitController) GetSitApplicationDetails(c *gin.Context) {
 	application := c.Param("application")
-	ret, err := ctrl.WatchService.GetPodByApplication(c, application)
+	ret, err := ctrl.WatchService.GetSitPodByApplication(c, application)
 	if err != nil {
 		util.Logger.Errorf("controller.GetSitApplicationDetails err: %s", err)
 		ctrl.Jsonify(c, 400, struct{}{}, err.Error())

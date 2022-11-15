@@ -87,8 +87,11 @@ func (s *Service) GetPodByProject(ctx context.Context, project string) ([]*commo
 	return ret, nil
 }
 
-func (s *Service) GetPodByApplication(ctx context.Context, application string) (*common.PodByApplication, error) {
-	podlist, err := s.GetPodByLabel(ctx, &common.SelectorCondList{Cond: []common.SelectorCond{{Key: "app", Value: application}}})
+func (s *Service) GetSitPodByApplication(ctx context.Context, application string) (*common.PodByApplication, error) {
+	set := make(map[string]string)
+	set["app"] = application
+	selector := labels.SelectorFromSet(set)
+	podlist, err := s.Mid.K8sclient.PodLister.Pods(util.ProjectToNS(util.ToSit(application))).List(selector)
 	if err != nil {
 		util.Logger.Errorf("watch.GetPodByApplication err: %s", err)
 		return nil, err
