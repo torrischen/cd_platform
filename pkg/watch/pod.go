@@ -67,7 +67,7 @@ func (s *Service) GetPodByProject(ctx context.Context, project string) ([]*commo
 					CreateTime: podlist[i].CreationTimestamp.Format("2006-01-02 15:04:05"),
 					HostIp:     podlist[i].Status.HostIP,
 					PodIp:      podlist[i].Status.PodIP,
-					Status:     podlist[i].Status.ContainerStatuses[0].State.String(),
+					Status:     &podlist[i].Status.ContainerStatuses[0].State,
 				}
 				podDetails = append(podDetails, pd)
 			}
@@ -106,7 +106,7 @@ func (s *Service) GetSitPodByApplication(ctx context.Context, application string
 			CreateTime: podlist[i].CreationTimestamp.Format("2006-01-02 15:04:05"),
 			HostIp:     podlist[i].Status.HostIP,
 			PodIp:      podlist[i].Status.PodIP,
-			Status:     podlist[i].Status.ContainerStatuses[0].State.String(),
+			Status:     &podlist[i].Status.ContainerStatuses[0].State,
 		}
 		podDetails = append(podDetails, pd)
 	}

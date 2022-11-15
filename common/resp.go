@@ -1,5 +1,7 @@
 package common
 
+import corev1 "k8s.io/api/core/v1"
+
 type ResponseBody struct {
 	Code    int         `json:"code"`
 	Data    interface{} `json:"data"`
@@ -21,11 +23,11 @@ type PodByApplication struct {
 }
 
 type PodDetail struct {
-	Name       string `json:"name"`
-	Namespace  string `json:"namespace"`
-	Image      string `json:"image"`
-	CreateTime string `json:"create_time"`
-	HostIp     string `json:"host_ip"`
-	PodIp      string `json:"pod_ip"`
-	Status     string `json:"status"`
+	Name       string                 `json:"name"`
+	Namespace  string                 `json:"namespace"`
+	Image      string                 `json:"image"`
+	CreateTime string                 `json:"create_time"`
+	HostIp     string                 `json:"host_ip"`
+	PodIp      string                 `json:"pod_ip"`
+	Status     *corev1.ContainerState `json:"status"`
 }
