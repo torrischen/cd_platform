@@ -47,7 +47,7 @@ func Init(conf conf.Config) *Client {
 		return nil
 	}
 
-	sharedIM := informers.NewSharedInformerFactory(clientset, 30*time.Minute)
+	sharedIM := informers.NewSharedInformerFactory(clientset, 4*time.Hour)
 
 	sharedIM.Core().V1().Namespaces().Informer().AddEventHandler(cache.ResourceEventHandlerFuncs{
 		AddFunc: func(obj interface{}) {
