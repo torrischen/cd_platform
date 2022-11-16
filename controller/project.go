@@ -52,14 +52,14 @@ func (ctrl *ProjectController) InitProject(c *gin.Context) {
 }
 
 func (ctrl *ProjectController) GetProjectList(c *gin.Context) {
-	var args common.GetProjectListQueryArgs
-	if err := c.BindQuery(&args); err != nil {
+	args := new(common.GetProjectListQueryArgs)
+	if err := c.BindQuery(args); err != nil {
 		util.Logger.Errorf("controller.GetProjectList page or pagesize err: %s", err)
 		ctrl.Jsonify(c, 400, struct{}{}, err.Error())
 		return
 	}
 
-	ret, err := ext.MiddleWare.MysqlClient.GetProjectList(args.Page, args.Pagesize)
+	ret, err := ext.MiddleWare.MysqlClient.GetProjectList(args.Page, args.PageSize)
 	if err != nil {
 		util.Logger.Errorf("controller.GetProjectList err: %s", err)
 		ctrl.Jsonify(c, 400, struct{}{}, err.Error())

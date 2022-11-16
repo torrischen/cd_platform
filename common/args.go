@@ -1,14 +1,19 @@
 package common
 
+import (
+	appsv1 "k8s.io/api/apps/v1"
+	corev1 "k8s.io/api/core/v1"
+)
+
 type InitProjectArgs struct {
 	Name string `json:"name"`
 }
 
 type CreateProjectArgs struct {
-	Project       string      `json:"project"`
-	DeploymentRaw []byte      `json:"deployment_raw"`
-	ServiceRaw    []byte      `json:"service_raw"`
-	IngressRule   IngressRule `json:"ingress_rule"`
+	Project       string             `json:"project"`
+	DeploymentRaw *appsv1.Deployment `json:"deployment_raw"`
+	ServiceRaw    *corev1.Service    `json:"service_raw"`
+	IngressRule   IngressRule        `json:"ingress_rule"`
 }
 
 type IngressRule struct {
@@ -28,10 +33,10 @@ type DeployApplicationArgs struct {
 }
 
 type CreateSitApplicationArgs struct {
-	Application   string      `json:"application"`
-	DeploymentRaw []byte      `json:"deployment_raw"`
-	ServiceRaw    []byte      `json:"service_raw"`
-	IngressRule   IngressRule `json:"ingress_rule"`
+	Application   string             `json:"application"`
+	DeploymentRaw *appsv1.Deployment `json:"deployment_raw"`
+	ServiceRaw    *corev1.Service    `json:"service_raw"`
+	IngressRule   IngressRule        `json:"ingress_rule"`
 }
 
 type DeploySitApplicationArgs struct {
@@ -44,6 +49,6 @@ type DestroySitApplicationArgs struct {
 }
 
 type GetProjectListQueryArgs struct {
-	Page     int `json:"page"`
-	Pagesize int `json:"pagesize"`
+	Page     int `form:"page"`
+	PageSize int `form:"page_size"`
 }

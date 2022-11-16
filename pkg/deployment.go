@@ -2,25 +2,14 @@ package pkg
 
 import (
 	"cd_platform/util"
-	"k8s.io/apimachinery/pkg/runtime/schema"
-
 	"context"
+	appsv1 "k8s.io/api/apps/v1"
 
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
-func (s *Service) CreateDeployment(ctx context.Context, project string, raw []byte) error {
-	uns, err := util.RawJsonToUnstructured(raw)
-	if err != nil {
-		util.Logger.Errorf("exec.CreateDeployment err: %s", err)
-		return err
-	}
-
-	if _, err := s.Mid.K8sclient.DynamicClient.Resource(schema.GroupVersionResource{
-		Group:    "apps",
-		Version:  "v1",
-		Resource: "deployments",
-	}).Namespace(util.ProjectToNS(project)).Create(ctx, uns, metav1.CreateOptions{}); err != nil {
+func (s *Service) CreateDeployment(ctx context.Context, project string, deployment *appsv1.Deployment) error {
+	if _, err := s.Mid.K8sclient.ClientSet.AppsV1().Deployments(util.ProjectToNS(project)).Create(ctx, deployment, metav1.CreateOptions{}); err != nil {
 		util.Logger.Errorf("exec.CreateDeployment err: %s", err)
 		return err
 	}

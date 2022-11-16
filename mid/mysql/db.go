@@ -28,6 +28,7 @@ func Init(conf conf.Config) *Client {
 	c := &Client{}
 	dsn := fmt.Sprintf("%s:%s@tcp(%s)/%s?charset=utf8mb4&parseTime=True&loc=Local", conf.MysqlUser, conf.MysqlPass, conf.MysqlAddr, conf.MysqlDb)
 	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{
+		//Logger: logger.Default.LogMode(logger.Info),
 		NamingStrategy: schema.NamingStrategy{
 			SingularTable: true,
 		},
