@@ -84,7 +84,7 @@ func (ctrl *ProjectController) GetRepoList(c *gin.Context) {
 }
 
 func (ctrl *ProjectController) CreateApplication(c *gin.Context) {
-	var args common.CreateProjectArgs
+	var args common.CreateApplicationArgs
 	if err := c.BindJSON(&args); err != nil {
 		util.Logger.Errorf("controller.CreateApplication err: %s", err)
 		ctrl.Jsonify(c, 400, struct{}{}, err.Error())
@@ -113,7 +113,7 @@ func (ctrl *ProjectController) CreateApplication(c *gin.Context) {
 }
 
 func (ctrl *ProjectController) DestroyApplication(c *gin.Context) {
-	var args common.DestroyProjectArgs
+	var args common.DestroyApplicationArgs
 	if err := c.BindJSON(&args); err != nil {
 		util.Logger.Errorf("controller.DestroyProject err: %s", err)
 		ctrl.Jsonify(c, 400, struct{}{}, err.Error())

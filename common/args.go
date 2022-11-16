@@ -9,7 +9,7 @@ type InitProjectArgs struct {
 	Name string `json:"name"`
 }
 
-type CreateProjectArgs struct {
+type CreateApplicationArgs struct {
 	Project       string             `json:"project"`
 	DeploymentRaw *appsv1.Deployment `json:"deployment_raw"`
 	ServiceRaw    *corev1.Service    `json:"service_raw"`
@@ -21,7 +21,7 @@ type IngressRule struct {
 	Port        int32  `json:"port"`
 }
 
-type DestroyProjectArgs struct {
+type DestroyApplicationArgs struct {
 	Project     string `json:"project"`
 	Application string `json:"application"`
 }

@@ -79,21 +79,25 @@ func (ctrl *SitController) DestroySitApplication(c *gin.Context) {
 	if err := ctrl.SitService.DeleteSitIngressRule(c, args.Application); err != nil {
 		util.Logger.Errorf("controller.DestroySitApplication DeleteSitIngressRule err: %s", err)
 		ctrl.Jsonify(c, 400, struct{}{}, err.Error())
+		return
 	}
 
 	if err := ctrl.SitService.DeleteSitService(c, args.Application); err != nil {
 		util.Logger.Errorf("controller.DestroySitApplication DeleteSitService err: %s", err)
 		ctrl.Jsonify(c, 400, struct{}{}, err.Error())
+		return
 	}
 
 	if err := ctrl.SitService.DeleteSitDeployment(c, args.Application); err != nil {
 		util.Logger.Errorf("controller.DestroySitApplication DeleteSitDeployment err: %s", err)
 		ctrl.Jsonify(c, 400, struct{}{}, err.Error())
+		return
 	}
 
 	if err := ctrl.SitService.DeleteSitNamespace(c, args.Application); err != nil {
 		util.Logger.Errorf("controller.DestroySitApplication DeleteSitNS err: %s", err)
 		ctrl.Jsonify(c, 400, struct{}{}, err.Error())
+		return
 	}
 
 	ctrl.Jsonify(c, 200, struct{}{}, "success")
