@@ -18,12 +18,16 @@ func InitController() *gin.Engine {
 	pc.POST("/application/destroy", projectController.DestroyApplication)
 	pc.POST("/application/deploy", projectController.DeployApplication)
 	pc.GET("/:project/detail", projectController.GetApplicationDetails)
+	pc.POST("/application/ingress/insert", projectController.InsertApplicationIngressPath)
+	pc.GET("/:project/application/:application/ingress", projectController.GetApplicationIngress)
 
 	sit := engine.Group("/api/dev/sit")
 	sit.POST("/application/create", sitController.CreateSitApplication)
 	sit.POST("/application/deploy", sitController.DeploySitApplication)
 	sit.POST("/application/destroy", sitController.DestroySitApplication)
 	sit.GET("/application/:application/detail", sitController.GetSitApplicationDetails)
+	sit.POST("/application/ingress/insert", sitController.InsertSitApplicationIngressPath)
+	sit.GET("/application/:application/ingress", sitController.GetSitApplicationIngress)
 
 	return engine
 }

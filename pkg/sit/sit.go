@@ -18,7 +18,7 @@ type SitService interface {
 	DeleteSitService(ctx context.Context, application string) error
 	DeleteSitStatefulset(ctx context.Context, application string) error
 	DeleteSitNamespace(ctx context.Context, application string) error
-	InsertSitIngressRule(ctx context.Context, application string, rule *common.IngressRule) error
+	InsertSitIngressRule(ctx context.Context, rule *common.IngressRule) error
 	DeleteSitIngressRule(ctx context.Context, application string) error
 	UpdateSitDeployment(ctx context.Context, application string, image string) error
 }

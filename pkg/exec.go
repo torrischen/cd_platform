@@ -19,7 +19,7 @@ type ExecService interface {
 	DeleteService(ctx context.Context, project string, application string) error
 	DeleteStatefulset(ctx context.Context, project string, application string) error
 	DeleteNamespace(ctx context.Context, project string) error
-	InsertIngressRule(ctx context.Context, project string, rule *common.IngressRule) error
+	InsertIngressRule(ctx context.Context, rule *common.IngressRule) error
 	DeleteIngressRule(ctx context.Context, project string, application string) error
 	UpdateDeployment(ctx context.Context, project string, application string, image string) error
 }

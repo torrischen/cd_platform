@@ -103,13 +103,30 @@ func (ctrl *ProjectController) CreateApplication(c *gin.Context) {
 		return
 	}
 
-	if err := ctrl.ExecService.InsertIngressRule(c, args.Project, &args.IngressRule); err != nil {
-		util.Logger.Errorf("controller.CreateApplication UpdateIngress err: %s", err)
+	//if err := ctrl.ExecService.InsertIngressRule(c, args.Project, &args.IngressRule); err != nil {
+	//	util.Logger.Errorf("controller.CreateApplication UpdateIngress err: %s", err)
+	//	ctrl.Jsonify(c, 400, struct{}{}, err.Error())
+	//	return
+	//}
+
+	ctrl.Jsonify(c, 200, args.Project, "success")
+}
+
+func (ctrl *ProjectController) InsertApplicationIngressPath(c *gin.Context) {
+	var args common.IngressRule
+	if err := c.BindJSON(&args); err != nil {
+		util.Logger.Errorf("controller.InsertApplicationIngressPath err: %s", err)
 		ctrl.Jsonify(c, 400, struct{}{}, err.Error())
 		return
 	}
 
-	ctrl.Jsonify(c, 200, args.Project, "success")
+	if err := ctrl.ExecService.InsertIngressRule(c, &args); err != nil {
+		util.Logger.Errorf("controller.InsertApplicationIngressPath err: %s", err)
+		ctrl.Jsonify(c, 400, struct{}{}, err.Error())
+		return
+	}
+
+	ctrl.Jsonify(c, 200, struct{}{}, "success")
 }
 
 func (ctrl *ProjectController) DestroyApplication(c *gin.Context) {
@@ -164,6 +181,20 @@ func (ctrl *ProjectController) GetApplicationDetails(c *gin.Context) {
 	ret, err := ctrl.WatchService.GetPodByProject(c, project)
 	if err != nil {
 		util.Logger.Errorf("controller.GetApplicationDetails err: %s", err)
+		ctrl.Jsonify(c, 400, struct{}{}, err.Error())
+		return
+	}
+
+	ctrl.Jsonify(c, 200, ret, "success")
+}
+
+func (ctrl *ProjectController) GetApplicationIngress(c *gin.Context) {
+	project := c.Param("project")
+	application := c.Param("application")
+
+	ret, err := ctrl.WatchService.GetIngressByApplication(c, project, application)
+	if err != nil {
+		util.Logger.Errorf("controller.GetSitApplicationIngress err: %s", err)
 		ctrl.Jsonify(c, 400, struct{}{}, err.Error())
 		return
 	}

@@ -3,6 +3,7 @@ package watch
 import (
 	"cd_platform/common"
 	"cd_platform/util"
+	"strings"
 
 	"context"
 
@@ -30,6 +31,51 @@ func (s *Service) GetIngressByLabel(ctx context.Context, cond *common.SelectorCo
 	if err != nil {
 		util.Logger.Errorf("watch.GetIngressByLabel err: %s", err)
 		return nil, err
+	}
+
+	return ret, nil
+}
+
+func (s *Service) GetIngressByApplication(ctx context.Context, project string, application string) ([]*common.IngressRule, error) {
+	ing, err := s.GetIngressByName(ctx, "default", "cd-ingress")
+	if err != nil {
+		util.Logger.Errorf("watch.GetIngressByApplication err: %s", err)
+		return nil, err
+	}
+
+	ret := make([]*common.IngressRule, 0)
+	rules := ing.Spec.Rules[0].HTTP.Paths
+	for i := 0; i < len(rules); i++ {
+		if strings.Contains(rules[i].Path, "/api/"+project+"/"+application) {
+			tmp := &common.IngressRule{}
+			tmp.Project = project
+			tmp.Application = application
+			tmp.Path = rules[i].Path
+			tmp.Port = rules[i].Backend.Service.Port.Number
+			ret = append(ret, tmp)
+		}
+	}
+
+	return ret, nil
+}
+
+func (s *Service) GetSitIngressByApplication(ctx context.Context, application string) ([]*common.SitIngressRule, error) {
+	ing, err := s.GetIngressByName(ctx, "default", "cd-ingress")
+	if err != nil {
+		util.Logger.Errorf("watch.GetSitIngressByApplication err: %s", err)
+		return nil, err
+	}
+
+	ret := make([]*common.SitIngressRule, 0)
+	rules := ing.Spec.Rules[0].HTTP.Paths
+	for i := 0; i < len(rules); i++ {
+		if strings.Contains(rules[i].Path, "/api/"+util.ToSit(application)+"/"+application) {
+			tmp := &common.SitIngressRule{}
+			tmp.Application = application
+			tmp.Path = rules[i].Path
+			tmp.Port = rules[i].Backend.Service.Port.Number
+			ret = append(ret, tmp)
+		}
 	}
 
 	return ret, nil

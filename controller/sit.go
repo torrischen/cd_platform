@@ -42,8 +42,25 @@ func (ctrl *SitController) CreateSitApplication(c *gin.Context) {
 		return
 	}
 
-	if err := ctrl.SitService.InsertSitIngressRule(c, args.Application, &args.IngressRule); err != nil {
-		util.Logger.Errorf("controller.CreateSitApplication InsertIngressRule err: %s", err)
+	//if err := ctrl.SitService.InsertSitIngressRule(c, args.Application, &args.IngressRule); err != nil {
+	//	util.Logger.Errorf("controller.CreateSitApplication InsertIngressRule err: %s", err)
+	//	ctrl.Jsonify(c, 400, struct{}{}, err.Error())
+	//	return
+	//}
+
+	ctrl.Jsonify(c, 200, struct{}{}, "success")
+}
+
+func (ctrl *SitController) InsertSitApplicationIngressPath(c *gin.Context) {
+	var args common.IngressRule
+	if err := c.BindJSON(&args); err != nil {
+		util.Logger.Errorf("controller.InsertApplicationIngressPath err: %s", err)
+		ctrl.Jsonify(c, 400, struct{}{}, err.Error())
+		return
+	}
+
+	if err := ctrl.SitService.InsertSitIngressRule(c, &args); err != nil {
+		util.Logger.Errorf("controller.InsertApplicationIngressPath err: %s", err)
 		ctrl.Jsonify(c, 400, struct{}{}, err.Error())
 		return
 	}
@@ -108,6 +125,19 @@ func (ctrl *SitController) GetSitApplicationDetails(c *gin.Context) {
 	ret, err := ctrl.WatchService.GetSitPodByApplication(c, application)
 	if err != nil {
 		util.Logger.Errorf("controller.GetSitApplicationDetails err: %s", err)
+		ctrl.Jsonify(c, 400, struct{}{}, err.Error())
+		return
+	}
+
+	ctrl.Jsonify(c, 200, ret, "success")
+}
+
+func (ctrl *SitController) GetSitApplicationIngress(c *gin.Context) {
+	application := c.Param("application")
+
+	ret, err := ctrl.WatchService.GetSitIngressByApplication(c, application)
+	if err != nil {
+		util.Logger.Errorf("controller.GetSitApplicationIngress err: %s", err)
 		ctrl.Jsonify(c, 400, struct{}{}, err.Error())
 		return
 	}

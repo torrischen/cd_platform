@@ -13,11 +13,18 @@ type CreateApplicationArgs struct {
 	Project       string             `json:"project"`
 	DeploymentRaw *appsv1.Deployment `json:"deployment_raw"`
 	ServiceRaw    *corev1.Service    `json:"service_raw"`
-	IngressRule   IngressRule        `json:"ingress_rule"`
 }
 
 type IngressRule struct {
+	Project     string `json:"project"`
 	Application string `json:"application"`
+	Path        string `json:"path"`
+	Port        int32  `json:"port"`
+}
+
+type SitIngressRule struct {
+	Application string `json:"application"`
+	Path        string `json:"path"`
 	Port        int32  `json:"port"`
 }
 
@@ -36,7 +43,6 @@ type CreateSitApplicationArgs struct {
 	Application   string             `json:"application"`
 	DeploymentRaw *appsv1.Deployment `json:"deployment_raw"`
 	ServiceRaw    *corev1.Service    `json:"service_raw"`
-	IngressRule   IngressRule        `json:"ingress_rule"`
 }
 
 type DeploySitApplicationArgs struct {

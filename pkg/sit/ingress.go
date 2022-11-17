@@ -6,8 +6,9 @@ import (
 	"context"
 )
 
-func (s *Service) InsertSitIngressRule(ctx context.Context, application string, rule *common.IngressRule) error {
-	return s.Exec.InsertIngressRule(ctx, util.ToSit(application), rule)
+func (s *Service) InsertSitIngressRule(ctx context.Context, rule *common.IngressRule) error {
+	rule.Project = util.ToSit(rule.Project)
+	return s.Exec.InsertIngressRule(ctx, rule)
 }
 
 func (s *Service) DeleteSitIngressRule(ctx context.Context, application string) error {
