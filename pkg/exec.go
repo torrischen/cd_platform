@@ -23,6 +23,7 @@ type ExecService interface {
 	DeleteIngressRule(ctx context.Context, project string, application string) error
 	DeleteSpecifiedIngressRule(ctx context.Context, path string) error
 	UpdateDeployment(ctx context.Context, project string, application string, image string) error
+	PatchDeploymentReplica(ctx context.Context, project string, application string, replica int32) error
 }
 
 type Service struct {

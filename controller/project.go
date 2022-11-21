@@ -234,3 +234,21 @@ func (ctrl *ProjectController) DeleteSpecifiedIngressRule(c *gin.Context) {
 
 	ctrl.Jsonify(c, 200, struct{}{}, "success")
 }
+
+func (ctrl *ProjectController) PatchApplicationReplica(c *gin.Context) {
+	var args common.PatchReplicaArgs
+	if err := c.BindJSON(&args); err != nil {
+		util.Logger.Errorf("controller.PatchApplicationReplica err: %s", err)
+		ctrl.Jsonify(c, 400, struct{}{}, err.Error())
+		return
+	}
+
+	err := ctrl.ExecService.PatchDeploymentReplica(c, args.Project, args.Application, args.Replica)
+	if err != nil {
+		util.Logger.Errorf("controller.PatchApplicationReplica err: %s", err)
+		ctrl.Jsonify(c, 400, struct{}{}, err.Error())
+		return
+	}
+
+	ctrl.Jsonify(c, 200, struct{}{}, "success")
+}
