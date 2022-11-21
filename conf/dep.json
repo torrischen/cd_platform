@@ -2,29 +2,29 @@
   "apiVersion": "apps/v1",
   "kind": "Deployment",
   "metadata": {
-    "name": "nginx-deployment //"
+    "name": "nginx-deployment"
   },
   "spec": {
     "replicas": 3,
     "selector": {
       "matchLabels": {
-        "app": "nginx-deployment //"
+        "app": "nginx-deployment"
       }
     },
     "template": {
       "metadata": {
         "labels": {
-          "app": "nginx-deployment //"
+          "app": "nginx-deployment"
         }
       },
       "spec": {
         "containers": [
           {
             "name": "nginx-deployment",
-            "image": "nginx:1.15 //",
+            "image": "nginx:1.15",
             "ports": [
               {
-                "containerPort //": 80
+                "containerPort": 80
               }
             ]
           }

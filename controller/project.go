@@ -6,6 +6,7 @@ import (
 	"cd_platform/pkg"
 	"cd_platform/pkg/watch"
 	"cd_platform/util"
+
 	"github.com/gin-gonic/gin"
 )
 
@@ -200,4 +201,18 @@ func (ctrl *ProjectController) GetApplicationIngress(c *gin.Context) {
 	}
 
 	ctrl.Jsonify(c, 200, ret, "success")
+}
+
+func (ctrl *ProjectController) GetPodLog(c *gin.Context) {
+	project := c.Param("project")
+	podname := c.Param("podname")
+
+	ret, err := ctrl.WatchService.GetPodLog(c, project, podname)
+	if err != nil {
+		util.Logger.Errorf("controller.GetPodLog err: %s", err)
+		ctrl.Jsonify(c, 400, struct{}{}, err.Error())
+		return
+	}
+
+	ctrl.Jsonify(c, 200, util.ByteToString(ret), "success")
 }

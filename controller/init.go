@@ -20,6 +20,7 @@ func InitController() *gin.Engine {
 	pc.GET("/:project/detail", projectController.GetApplicationDetails)
 	pc.POST("/application/ingress/insert", projectController.InsertApplicationIngressPath)
 	pc.GET("/:project/application/:application/ingress", projectController.GetApplicationIngress)
+	pc.GET("/:project/pod/:podname/log", projectController.GetPodLog)
 
 	sit := engine.Group("/api/dev/sit")
 	sit.POST("/application/create", sitController.CreateSitApplication)
@@ -28,6 +29,7 @@ func InitController() *gin.Engine {
 	sit.GET("/application/:application/detail", sitController.GetSitApplicationDetails)
 	sit.POST("/application/ingress/insert", sitController.InsertSitApplicationIngressPath)
 	sit.GET("/application/:application/ingress", sitController.GetSitApplicationIngress)
+	sit.GET("/application/:application/log/:podname/log", sitController.GetSitPodLog)
 
 	return engine
 }

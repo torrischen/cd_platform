@@ -6,6 +6,7 @@ import (
 	"cd_platform/pkg/sit"
 	"cd_platform/pkg/watch"
 	"cd_platform/util"
+
 	"github.com/gin-gonic/gin"
 )
 
@@ -143,4 +144,18 @@ func (ctrl *SitController) GetSitApplicationIngress(c *gin.Context) {
 	}
 
 	ctrl.Jsonify(c, 200, ret, "success")
+}
+
+func (ctrl *SitController) GetSitPodLog(c *gin.Context) {
+	application := c.Param("applcation")
+	podname := c.Param("podname")
+
+	ret, err := ctrl.WatchService.GetSitPodLog(c, application, podname)
+	if err != nil {
+		util.Logger.Errorf("controller.GetSitPodLog err: %s", err)
+		ctrl.Jsonify(c, 400, struct{}{}, err.Error())
+		return
+	}
+
+	ctrl.Jsonify(c, 200, util.ByteToString(ret), "success")
 }

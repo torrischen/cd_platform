@@ -3,6 +3,7 @@ package watch
 import (
 	"cd_platform/common"
 	"cd_platform/util"
+	"io/ioutil"
 	"sync"
 
 	"context"
@@ -115,4 +116,38 @@ func (s *Service) GetSitPodByApplication(ctx context.Context, application string
 		Application: application,
 		Pods:        podDetails,
 	}, nil
+}
+
+func (s *Service) GetPodLog(ctx context.Context, project string, podname string) ([]byte, error) {
+	log := s.Mid.K8sclient.ClientSet.CoreV1().Pods(util.ProjectToNS(project)).GetLogs(podname, &corev1.PodLogOptions{})
+	podlog, err := log.Stream(ctx)
+	if err != nil {
+		util.Logger.Errorf("watch.GetPodLog err: %s", err)
+		return nil, err
+	}
+
+	logbody, err := ioutil.ReadAll(podlog)
+	if err != nil {
+		util.Logger.Errorf("watch.GetPodLog err: %s", err)
+		return nil, err
+	}
+
+	return logbody, nil
+}
+
+func (s *Service) GetSitPodLog(ctx context.Context, application string, podname string) ([]byte, error) {
+	log := s.Mid.K8sclient.ClientSet.CoreV1().Pods(util.ProjectToNS(util.ToSit(application))).GetLogs(podname, &corev1.PodLogOptions{})
+	podlog, err := log.Stream(ctx)
+	if err != nil {
+		util.Logger.Errorf("watch.GetSitPodLog err: %s", err)
+		return nil, err
+	}
+
+	logbody, err := ioutil.ReadAll(podlog)
+	if err != nil {
+		util.Logger.Errorf("watch.GetSitPodLog err: %s", err)
+		return nil, err
+	}
+
+	return logbody, nil
 }
