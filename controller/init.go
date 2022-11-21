@@ -22,7 +22,7 @@ func InitController() *gin.Engine {
 	pc.GET("/:project/application/:application/ingress", projectController.GetApplicationIngress)
 	pc.GET("/:project/pod/:podname/log", projectController.GetPodLog)
 	pc.POST("/application/ingress/delete", projectController.DeleteSpecifiedIngressRule)
-	pc.POST("/:project/application/:application/replica/patch", projectController.PatchApplicationReplica)
+	pc.POST("/application/replica/patch", projectController.PatchApplicationReplica)
 
 	sit := engine.Group("/api/dev/sit")
 	sit.POST("/application/create", sitController.CreateSitApplication)

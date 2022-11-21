@@ -53,11 +53,6 @@ func Init(conf conf.Config) *Client {
 		AddFunc: func(obj interface{}) {
 			util.Logger.Infof("New namespace added: %s", obj.(metav1.Object).GetName())
 		},
-		UpdateFunc: func(oldObj, newObj interface{}) {
-			oobj := oldObj.(metav1.Object)
-			nobj := newObj.(metav1.Object)
-			util.Logger.Infof("namespace update, %s has been updated to %s", oobj.GetName(), nobj.GetName())
-		},
 		DeleteFunc: func(obj interface{}) {
 			util.Logger.Infof("namespace deleted: %s", obj.(metav1.Object).GetName())
 		},
@@ -65,12 +60,7 @@ func Init(conf conf.Config) *Client {
 
 	sharedIM.Apps().V1().Deployments().Informer().AddEventHandler(cache.ResourceEventHandlerFuncs{
 		AddFunc: func(obj interface{}) {
-			util.Logger.Infof("New deployemnt added: %s", obj.(metav1.Object).GetName())
-		},
-		UpdateFunc: func(oldObj, newObj interface{}) {
-			oobj := oldObj.(metav1.Object)
-			nobj := newObj.(metav1.Object)
-			util.Logger.Infof("deployment update, %s has been updated to %s", oobj.GetName(), nobj.GetName())
+			util.Logger.Infof("New deployment added: %s", obj.(metav1.Object).GetName())
 		},
 		DeleteFunc: func(obj interface{}) {
 			util.Logger.Infof("deployment deleted: %s", obj.(metav1.Object).GetName())
@@ -81,11 +71,6 @@ func Init(conf conf.Config) *Client {
 		AddFunc: func(obj interface{}) {
 			util.Logger.Infof("New statefulset added: %s", obj.(metav1.Object).GetName())
 		},
-		UpdateFunc: func(oldObj, newObj interface{}) {
-			oobj := oldObj.(metav1.Object)
-			nobj := newObj.(metav1.Object)
-			util.Logger.Infof("statefulset update, %s has been updated to %s", oobj.GetName(), nobj.GetName())
-		},
 		DeleteFunc: func(obj interface{}) {
 			util.Logger.Infof("statefulset deleted: %s", obj.(metav1.Object).GetName())
 		},
@@ -94,11 +79,6 @@ func Init(conf conf.Config) *Client {
 	sharedIM.Core().V1().Pods().Informer().AddEventHandler(cache.ResourceEventHandlerFuncs{
 		AddFunc: func(obj interface{}) {
 			util.Logger.Infof("New pod added: %s", obj.(metav1.Object).GetName())
-		},
-		UpdateFunc: func(oldObj, newObj interface{}) {
-			oobj := oldObj.(metav1.Object)
-			nobj := newObj.(metav1.Object)
-			util.Logger.Infof("pod updated, %s has been updated to %s", oobj.GetName(), nobj.GetName())
 		},
 		DeleteFunc: func(obj interface{}) {
 			util.Logger.Infof("pod deleted: %s", obj.(metav1.Object).GetName())
@@ -109,11 +89,6 @@ func Init(conf conf.Config) *Client {
 		AddFunc: func(obj interface{}) {
 			util.Logger.Infof("New service added: %s", obj.(metav1.Object).GetName())
 		},
-		UpdateFunc: func(oldObj, newObj interface{}) {
-			oobj := oldObj.(metav1.Object)
-			nobj := newObj.(metav1.Object)
-			util.Logger.Infof("service updated, %s has been updated to %s", oobj.GetName(), nobj.GetName())
-		},
 		DeleteFunc: func(obj interface{}) {
 			util.Logger.Infof("pkg deleted: %s", obj.(metav1.Object).GetName())
 		},
@@ -122,11 +97,6 @@ func Init(conf conf.Config) *Client {
 	sharedIM.Networking().V1().Ingresses().Informer().AddEventHandler(cache.ResourceEventHandlerFuncs{
 		AddFunc: func(obj interface{}) {
 			util.Logger.Infof("New ingress added: %s", obj.(metav1.Object).GetName())
-		},
-		UpdateFunc: func(oldObj, newObj interface{}) {
-			oobj := oldObj.(metav1.Object)
-			nobj := newObj.(metav1.Object)
-			util.Logger.Infof("ingress updated, %s has been updated to %s", oobj.GetName(), nobj.GetName())
 		},
 		DeleteFunc: func(obj interface{}) {
 			util.Logger.Infof("ingress deleted: %s", obj.(metav1.Object).GetName())
