@@ -18,7 +18,7 @@ type SitController struct {
 
 func NewSitController() *SitController {
 	return &SitController{
-		SitService:   sit.NewService(ext.MiddleWare),
+		SitService:   sit.NewService(),
 		WatchService: watch.NewService(ext.MiddleWare),
 	}
 }
@@ -33,6 +33,12 @@ func (ctrl *SitController) CreateSitApplication(c *gin.Context) {
 
 	if err := ctrl.SitService.CreateSitNamespace(c, args.Application); err != nil {
 		util.Logger.Errorf("controller.CreateSitApplication CreateNS err: %s", err)
+		ctrl.Jsonify(c, 400, struct{}{}, err.Error())
+		return
+	}
+
+	if err := ctrl.SitService.CreateSitDeployment(c, args.Application, args.DeploymentRaw); err != nil {
+		util.Logger.Errorf("controller.CreateSitApplication CreateDeployment err: %s", err)
 		ctrl.Jsonify(c, 400, struct{}{}, err.Error())
 		return
 	}

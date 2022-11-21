@@ -2,7 +2,6 @@ package sit
 
 import (
 	"cd_platform/common"
-	"cd_platform/mid"
 	"cd_platform/pkg"
 	"context"
 	appsv1 "k8s.io/api/apps/v1"
@@ -28,7 +27,7 @@ type Service struct {
 	Exec pkg.ExecService
 }
 
-func NewService(mid *mid.Middle) *Service {
+func NewService() *Service {
 	return &Service{
 		Exec: pkg.ExService,
 	}
