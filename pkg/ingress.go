@@ -4,9 +4,10 @@ import (
 	"cd_platform/common"
 	"cd_platform/util"
 	"context"
+	"strings"
+
 	networkv1 "k8s.io/api/networking/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	"strings"
 )
 
 func (s *Service) InsertIngressRule(ctx context.Context, rule *common.IngressRule) error {
