@@ -19,7 +19,7 @@ func (s *Service) InsertIngressRule(ctx context.Context, rule *common.IngressRul
 
 	pathType := networkv1.PathType("Prefix")
 	newIngRule := networkv1.HTTPIngressPath{
-		Path:     "/api/" + rule.Project + "/" + rule.Application + "/" + rule.Path,
+		Path:     "/api/" + rule.Project + "/" + rule.Application + rule.Path,
 		PathType: &pathType,
 		Backend: networkv1.IngressBackend{
 			Service: &networkv1.IngressServiceBackend{
@@ -59,6 +59,31 @@ func (s *Service) DeleteIngressRule(ctx context.Context, project string, applica
 	_, err = s.Mid.K8sclient.ClientSet.NetworkingV1().Ingresses("default").Update(ctx, ing, metav1.UpdateOptions{})
 	if err != nil {
 		util.Logger.Errorf("ExecService.DeleteIngressRule err: %s", err)
+		return err
+	}
+
+	return nil
+}
+
+func (s *Service) DeleteSpecifiedIngressRule(ctx context.Context, path string) error {
+	ing, err := s.Mid.K8sclient.IngressLister.Ingresses("default").Get("cd-ingress")
+	if err != nil {
+		util.Logger.Errorf("ExecService.DeleteSpecifiedIngressRule err: %s", err)
+		return err
+	}
+
+	newIngRule := ing.Spec.Rules[0].HTTP.Paths
+	for i := 0; i < len(ing.Spec.Rules[0].HTTP.Paths); i++ {
+		if ing.Spec.Rules[0].HTTP.Paths[i].Path == path {
+			newIngRule = append(newIngRule[:i], newIngRule[i+1:]...)
+			break
+		}
+	}
+	ing.Spec.Rules[0].HTTP.Paths = newIngRule
+
+	_, err = s.Mid.K8sclient.ClientSet.NetworkingV1().Ingresses("default").Update(ctx, ing, metav1.UpdateOptions{})
+	if err != nil {
+		util.Logger.Errorf("ExecService.DeleteSpecifiedIngressRule err: %s", err)
 		return err
 	}
 

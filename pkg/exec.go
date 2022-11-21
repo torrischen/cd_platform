@@ -21,6 +21,7 @@ type ExecService interface {
 	DeleteNamespace(ctx context.Context, project string) error
 	InsertIngressRule(ctx context.Context, rule *common.IngressRule) error
 	DeleteIngressRule(ctx context.Context, project string, application string) error
+	DeleteSpecifiedIngressRule(ctx context.Context, path string) error
 	UpdateDeployment(ctx context.Context, project string, application string, image string) error
 }
 

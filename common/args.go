@@ -58,3 +58,7 @@ type GetProjectListQueryArgs struct {
 	Page     int `form:"page"`
 	PageSize int `form:"page_size"`
 }
+
+type DeleteSpecifiedIngressRuleArgs struct {
+	Path string `json:"path"`
+}

@@ -159,3 +159,21 @@ func (ctrl *SitController) GetSitPodLog(c *gin.Context) {
 
 	ctrl.Jsonify(c, 200, util.ByteToString(ret), "success")
 }
+
+func (ctrl *SitController) DeleteSpecifiedSitIngressRule(c *gin.Context) {
+	var args common.DeleteSpecifiedIngressRuleArgs
+	if err := c.BindJSON(&args); err != nil {
+		util.Logger.Errorf("controller.DeleteSpecifiedSitIngressRule err: %s", err)
+		ctrl.Jsonify(c, 400, struct{}{}, err.Error())
+		return
+	}
+
+	err := ctrl.SitService.DeleteSpecifiedSitIngressRule(c, args.Path)
+	if err != nil {
+		util.Logger.Errorf("controller.DeleteSpecifiedSitIngressRule err: %s", err)
+		ctrl.Jsonify(c, 400, struct{}{}, err.Error())
+		return
+	}
+
+	ctrl.Jsonify(c, 200, struct{}{}, "success")
+}

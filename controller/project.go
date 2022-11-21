@@ -216,3 +216,21 @@ func (ctrl *ProjectController) GetPodLog(c *gin.Context) {
 
 	ctrl.Jsonify(c, 200, util.ByteToString(ret), "success")
 }
+
+func (ctrl *ProjectController) DeleteSpecifiedIngressRule(c *gin.Context) {
+	var args common.DeleteSpecifiedIngressRuleArgs
+	if err := c.BindJSON(&args); err != nil {
+		util.Logger.Errorf("controller.DeleteSpecifiedIngressRule err: %s", err)
+		ctrl.Jsonify(c, 400, struct{}{}, err.Error())
+		return
+	}
+
+	err := ctrl.ExecService.DeleteSpecifiedIngressRule(c, args.Path)
+	if err != nil {
+		util.Logger.Errorf("controller.DeleteSpecifiedIngressRule err: %s", err)
+		ctrl.Jsonify(c, 400, struct{}{}, err.Error())
+		return
+	}
+
+	ctrl.Jsonify(c, 200, struct{}{}, "success")
+}
