@@ -98,6 +98,11 @@ func Init(conf conf.Config) *Client {
 		AddFunc: func(obj interface{}) {
 			util.Logger.Infof("New ingress added: %s", obj.(metav1.Object).GetName())
 		},
+		UpdateFunc: func(oldObj, newObj interface{}) {
+			oobj := oldObj.(metav1.Object)
+			nobj := newObj.(metav1.Object)
+			util.Logger.Infof("%s:%s has been updated to %s:%s", oobj.GetName(), oobj.GetGenerateName(), nobj.GetName(), nobj.GetGenerateName())
+		},
 		DeleteFunc: func(obj interface{}) {
 			util.Logger.Infof("ingress deleted: %s", obj.(metav1.Object).GetName())
 		},
