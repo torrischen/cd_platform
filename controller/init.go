@@ -31,7 +31,7 @@ func InitController() *gin.Engine {
 	sit.GET("/project/:project/application/:application/detail", sitController.GetSitApplicationDetails)
 	sit.POST("/application/ingress/insert", sitController.InsertSitApplicationIngressPath)
 	sit.GET("/project/:project/application/:application/ingress", sitController.GetSitApplicationIngress)
-	sit.GET("/application/:application/log/:podname/log", sitController.GetSitPodLog)
+	sit.GET("/project/:project/application/:application/pod/:podname/log", sitController.GetSitPodLog)
 	sit.POST("/application/ingress/delete", sitController.DeleteSpecifiedSitIngressRule)
 
 	return engine

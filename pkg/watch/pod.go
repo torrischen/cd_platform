@@ -135,8 +135,8 @@ func (s *Service) GetPodLog(ctx context.Context, project string, podname string)
 	return logbody, nil
 }
 
-func (s *Service) GetSitPodLog(ctx context.Context, application string, podname string) ([]byte, error) {
-	log := s.Mid.K8sclient.ClientSet.CoreV1().Pods(util.ProjectToNS(util.ToSit(application))).GetLogs(podname, &corev1.PodLogOptions{})
+func (s *Service) GetSitPodLog(ctx context.Context, project string, application string, podname string) ([]byte, error) {
+	log := s.Mid.K8sclient.ClientSet.CoreV1().Pods(util.ProjectToNS(util.ToSit(project)+"-"+application)).GetLogs(podname, &corev1.PodLogOptions{})
 	podlog, err := log.Stream(ctx)
 	if err != nil {
 		util.Logger.Errorf("watch.GetSitPodLog err: %s", err)

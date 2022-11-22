@@ -28,7 +28,7 @@ type WatchService interface {
 	GetIngressByApplication(ctx context.Context, project string, application string) ([]*common.IngressRule, error)
 	GetSitIngressByApplication(ctx context.Context, project string, application string) ([]*common.SitIngressRule, error)
 	GetPodLog(ctx context.Context, project string, podname string) ([]byte, error)
-	GetSitPodLog(ctx context.Context, application string, podname string) ([]byte, error)
+	GetSitPodLog(ctx context.Context, project string, application string, podname string) ([]byte, error)
 }
 
 type Service struct {
