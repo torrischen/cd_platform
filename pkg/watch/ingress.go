@@ -59,7 +59,7 @@ func (s *Service) GetIngressByApplication(ctx context.Context, project string, a
 	return ret, nil
 }
 
-func (s *Service) GetSitIngressByApplication(ctx context.Context, application string) ([]*common.SitIngressRule, error) {
+func (s *Service) GetSitIngressByApplication(ctx context.Context, project string, application string) ([]*common.SitIngressRule, error) {
 	ing, err := s.GetIngressByName(ctx, "default", "cd-ingress")
 	if err != nil {
 		util.Logger.Errorf("watch.GetSitIngressByApplication err: %s", err)
@@ -69,7 +69,7 @@ func (s *Service) GetSitIngressByApplication(ctx context.Context, application st
 	ret := make([]*common.SitIngressRule, 0)
 	rules := ing.Spec.Rules[0].HTTP.Paths
 	for i := 0; i < len(rules); i++ {
-		if strings.Contains(rules[i].Path, "/api/"+util.ToSit(application)+"/"+application) {
+		if strings.Contains(rules[i].Path, "/api/"+util.ToSit(project)+"/"+application) {
 			tmp := &common.SitIngressRule{}
 			tmp.Application = application
 			tmp.Path = rules[i].Path

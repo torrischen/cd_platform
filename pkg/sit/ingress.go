@@ -11,8 +11,8 @@ func (s *Service) InsertSitIngressRule(ctx context.Context, rule *common.Ingress
 	return s.Exec.InsertIngressRule(ctx, rule)
 }
 
-func (s *Service) DeleteSitIngressRule(ctx context.Context, application string) error {
-	return s.Exec.DeleteIngressRule(ctx, util.ToSit(application), util.ToSit(application))
+func (s *Service) DeleteSitIngressRule(ctx context.Context, project string, application string) error {
+	return s.Exec.DeleteIngressRule(ctx, util.ToSit(project), application)
 }
 
 func (s *Service) DeleteSpecifiedSitIngressRule(ctx context.Context, path string) error {

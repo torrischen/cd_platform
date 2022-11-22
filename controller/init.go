@@ -28,9 +28,9 @@ func InitController() *gin.Engine {
 	sit.POST("/application/create", sitController.CreateSitApplication)
 	sit.POST("/application/deploy", sitController.DeploySitApplication)
 	sit.POST("/application/destroy", sitController.DestroySitApplication)
-	sit.GET("/application/:application/detail", sitController.GetSitApplicationDetails)
+	sit.GET("/project/:project/application/:application/detail", sitController.GetSitApplicationDetails)
 	sit.POST("/application/ingress/insert", sitController.InsertSitApplicationIngressPath)
-	sit.GET("/application/:application/ingress", sitController.GetSitApplicationIngress)
+	sit.GET("/project/:project/application/:application/ingress", sitController.GetSitApplicationIngress)
 	sit.GET("/application/:application/log/:podname/log", sitController.GetSitPodLog)
 	sit.POST("/application/ingress/delete", sitController.DeleteSpecifiedSitIngressRule)
 

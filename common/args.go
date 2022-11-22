@@ -40,17 +40,20 @@ type DeployApplicationArgs struct {
 }
 
 type CreateSitApplicationArgs struct {
+	Project       string             `json:"project"`
 	Application   string             `json:"application"`
 	DeploymentRaw *appsv1.Deployment `json:"deployment_raw"`
 	ServiceRaw    *corev1.Service    `json:"service_raw"`
 }
 
 type DeploySitApplicationArgs struct {
+	Project     string `json:"project"`
 	Application string `json:"application"`
 	Image       string `json:"image"`
 }
 
 type DestroySitApplicationArgs struct {
+	Project     string `json:"project"`
 	Application string `json:"application"`
 }
 

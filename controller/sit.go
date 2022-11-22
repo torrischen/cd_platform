@@ -31,19 +31,19 @@ func (ctrl *SitController) CreateSitApplication(c *gin.Context) {
 		return
 	}
 
-	if err := ctrl.SitService.CreateSitNamespace(c, args.Application); err != nil {
+	if err := ctrl.SitService.CreateSitNamespace(c, args.Project, args.Application); err != nil {
 		util.Logger.Errorf("controller.CreateSitApplication CreateNS err: %s", err)
 		ctrl.Jsonify(c, 400, struct{}{}, err.Error())
 		return
 	}
 
-	if err := ctrl.SitService.CreateSitDeployment(c, args.Application, args.DeploymentRaw); err != nil {
+	if err := ctrl.SitService.CreateSitDeployment(c, args.Project, args.DeploymentRaw); err != nil {
 		util.Logger.Errorf("controller.CreateSitApplication CreateDeployment err: %s", err)
 		ctrl.Jsonify(c, 400, struct{}{}, err.Error())
 		return
 	}
 
-	if err := ctrl.SitService.CreateSitService(c, args.Application, args.ServiceRaw); err != nil {
+	if err := ctrl.SitService.CreateSitService(c, args.Project, args.ServiceRaw); err != nil {
 		util.Logger.Errorf("controller.CreateSitApplication CreateService err: %s", err)
 		ctrl.Jsonify(c, 400, struct{}{}, err.Error())
 		return
@@ -83,7 +83,7 @@ func (ctrl *SitController) DeploySitApplication(c *gin.Context) {
 		return
 	}
 
-	if err := ctrl.SitService.UpdateSitDeployment(c, args.Application, args.Image); err != nil {
+	if err := ctrl.SitService.UpdateSitDeployment(c, args.Project, args.Application, args.Image); err != nil {
 		util.Logger.Errorf("controller.DeploySitApplication UpdateSitDeployment err: %s", err)
 		ctrl.Jsonify(c, 400, struct{}{}, err.Error())
 		return
@@ -100,25 +100,25 @@ func (ctrl *SitController) DestroySitApplication(c *gin.Context) {
 		return
 	}
 
-	if err := ctrl.SitService.DeleteSitIngressRule(c, args.Application); err != nil {
+	if err := ctrl.SitService.DeleteSitIngressRule(c, args.Project, args.Application); err != nil {
 		util.Logger.Errorf("controller.DestroySitApplication DeleteSitIngressRule err: %s", err)
 		ctrl.Jsonify(c, 400, struct{}{}, err.Error())
 		return
 	}
 
-	if err := ctrl.SitService.DeleteSitService(c, args.Application); err != nil {
+	if err := ctrl.SitService.DeleteSitService(c, args.Project, args.Application); err != nil {
 		util.Logger.Errorf("controller.DestroySitApplication DeleteSitService err: %s", err)
 		ctrl.Jsonify(c, 400, struct{}{}, err.Error())
 		return
 	}
 
-	if err := ctrl.SitService.DeleteSitDeployment(c, args.Application); err != nil {
+	if err := ctrl.SitService.DeleteSitDeployment(c, args.Project, args.Application); err != nil {
 		util.Logger.Errorf("controller.DestroySitApplication DeleteSitDeployment err: %s", err)
 		ctrl.Jsonify(c, 400, struct{}{}, err.Error())
 		return
 	}
 
-	if err := ctrl.SitService.DeleteSitNamespace(c, args.Application); err != nil {
+	if err := ctrl.SitService.DeleteSitNamespace(c, args.Project, args.Application); err != nil {
 		util.Logger.Errorf("controller.DestroySitApplication DeleteSitNS err: %s", err)
 		ctrl.Jsonify(c, 400, struct{}{}, err.Error())
 		return
@@ -128,8 +128,9 @@ func (ctrl *SitController) DestroySitApplication(c *gin.Context) {
 }
 
 func (ctrl *SitController) GetSitApplicationDetails(c *gin.Context) {
+	project := c.Param("project")
 	application := c.Param("application")
-	ret, err := ctrl.WatchService.GetSitPodByApplication(c, application)
+	ret, err := ctrl.WatchService.GetSitPodByApplication(c, project, application)
 	if err != nil {
 		util.Logger.Errorf("controller.GetSitApplicationDetails err: %s", err)
 		ctrl.Jsonify(c, 400, struct{}{}, err.Error())
@@ -140,9 +141,10 @@ func (ctrl *SitController) GetSitApplicationDetails(c *gin.Context) {
 }
 
 func (ctrl *SitController) GetSitApplicationIngress(c *gin.Context) {
+	project := c.Param("project")
 	application := c.Param("application")
 
-	ret, err := ctrl.WatchService.GetSitIngressByApplication(c, application)
+	ret, err := ctrl.WatchService.GetSitIngressByApplication(c, project, application)
 	if err != nil {
 		util.Logger.Errorf("controller.GetSitApplicationIngress err: %s", err)
 		ctrl.Jsonify(c, 400, struct{}{}, err.Error())
