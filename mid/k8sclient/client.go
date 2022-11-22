@@ -101,7 +101,7 @@ func Init(conf conf.Config) *Client {
 		UpdateFunc: func(oldObj, newObj interface{}) {
 			oobj := oldObj.(metav1.Object)
 			nobj := newObj.(metav1.Object)
-			util.Logger.Infof("%s:%s has been updated to %s:%s", oobj.GetName(), oobj.GetGenerateName(), nobj.GetName(), nobj.GetGenerateName())
+			util.Logger.Infof("%s:generation %d has been updated to %s:generation %d", oobj.GetName(), oobj.GetGeneration(), nobj.GetName(), nobj.GetGeneration())
 		},
 		DeleteFunc: func(obj interface{}) {
 			util.Logger.Infof("ingress deleted: %s", obj.(metav1.Object).GetName())
