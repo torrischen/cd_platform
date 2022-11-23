@@ -34,3 +34,18 @@ func (s *Service) GetDeploymentByLabel(ctx context.Context, cond *common.Selecto
 
 	return ret, nil
 }
+
+func (s *Service) GetDeploymentListByProject(ctx context.Context, project string) ([]string, error) {
+	deplist, err := s.Mid.K8sclient.DeploymentLister.Deployments(util.ProjectToNS(project)).List(labels.NewSelector())
+	if err != nil {
+		util.Logger.Errorf("watch.GetDeploymentListByProject err: %s", err)
+		return nil, err
+	}
+
+	ret := make([]string, 0)
+	for i := 0; i < len(deplist); i++ {
+		ret = append(ret, deplist[i].Name)
+	}
+
+	return ret, nil
+}

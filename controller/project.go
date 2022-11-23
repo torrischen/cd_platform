@@ -189,12 +189,39 @@ func (ctrl *ProjectController) DeployApplication(c *gin.Context) {
 	ctrl.Jsonify(c, 200, struct{}{}, "success")
 }
 
-func (ctrl *ProjectController) GetApplicationDetails(c *gin.Context) {
+func (ctrl *ProjectController) GetApplicationList(c *gin.Context) {
+	project := c.Param("project")
+
+	ret, err := ctrl.WatchService.GetDeploymentListByProject(c, project)
+	if err != nil {
+		util.Logger.Errorf("controller.GetApplicationList err: %s", err)
+		ctrl.Jsonify(c, 400, struct{}{}, err.Error())
+		return
+	}
+
+	ctrl.Jsonify(c, 200, ret, "success")
+}
+
+func (ctrl *ProjectController) GetApplicationDetailsByApplication(c *gin.Context) {
+	project := c.Param("project")
+	application := c.Param("application")
+
+	ret, err := ctrl.WatchService.GetPodByApplication(c, project, application)
+	if err != nil {
+		util.Logger.Errorf("controller.GetApplicationDetailsByApplication err: %s", err)
+		ctrl.Jsonify(c, 400, struct{}{}, err.Error())
+		return
+	}
+
+	ctrl.Jsonify(c, 200, ret, "success")
+}
+
+func (ctrl *ProjectController) GetApplicationDetailsByProject(c *gin.Context) {
 	project := c.Param("project")
 
 	ret, err := ctrl.WatchService.GetPodByProject(c, project)
 	if err != nil {
-		util.Logger.Errorf("controller.GetApplicationDetails err: %s", err)
+		util.Logger.Errorf("controller.GetApplicationDetailsByProject err: %s", err)
 		ctrl.Jsonify(c, 400, struct{}{}, err.Error())
 		return
 	}

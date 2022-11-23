@@ -37,6 +37,33 @@ func (s *Service) GetPodByLabel(ctx context.Context, cond *common.SelectorCondLi
 	return ret, nil
 }
 
+func (s *Service) GetPodByApplication(ctx context.Context, project string, application string) ([]*common.PodDetail, error) {
+	podlist, err := s.GetPodByLabel(ctx, &common.SelectorCondList{Cond: []common.SelectorCond{{Key: "app", Value: application}}})
+	if err != nil {
+		util.Logger.Errorf("watch.GetPodByApplication err: %s", err)
+		return nil, err
+	}
+
+	podDetails := make([]*common.PodDetail, 0)
+	for i := 0; i < len(podlist); i++ {
+		if podlist[i].Namespace != util.ProjectToNS(project) {
+			continue
+		}
+		pd := &common.PodDetail{
+			Name:       podlist[i].Name,
+			Namespace:  podlist[i].Namespace,
+			Image:      podlist[i].Spec.Containers[0].Image,
+			CreateTime: podlist[i].CreationTimestamp.Format("2006-01-02 15:04:05"),
+			HostIp:     podlist[i].Status.HostIP,
+			PodIp:      podlist[i].Status.PodIP,
+			Status:     &podlist[i].Status.ContainerStatuses[0].State,
+		}
+		podDetails = append(podDetails, pd)
+	}
+
+	return podDetails, nil
+}
+
 func (s *Service) GetPodByProject(ctx context.Context, project string) ([]*common.PodByApplication, error) {
 	deplist, err := s.Mid.K8sclient.DeploymentLister.Deployments(util.ProjectToNS(project)).List(labels.NewSelector())
 	if err != nil {
@@ -61,6 +88,9 @@ func (s *Service) GetPodByProject(ctx context.Context, project string) ([]*commo
 
 			podDetails := make([]*common.PodDetail, 0)
 			for i := 0; i < len(podlist); i++ {
+				if podlist[i].Namespace != util.ProjectToNS(project) {
+					continue
+				}
 				pd := &common.PodDetail{
 					Name:       podlist[i].Name,
 					Namespace:  podlist[i].Namespace,
@@ -88,7 +118,7 @@ func (s *Service) GetPodByProject(ctx context.Context, project string) ([]*commo
 	return ret, nil
 }
 
-func (s *Service) GetSitPodByApplication(ctx context.Context, project string, application string) (*common.PodByApplication, error) {
+func (s *Service) GetSitPodByApplication(ctx context.Context, project string, application string) ([]*common.PodDetail, error) {
 	set := make(map[string]string)
 	set["app"] = project
 	selector := labels.SelectorFromSet(set)
@@ -100,6 +130,9 @@ func (s *Service) GetSitPodByApplication(ctx context.Context, project string, ap
 
 	podDetails := make([]*common.PodDetail, 0)
 	for i := 0; i < len(podlist); i++ {
+		if podlist[i].Namespace != util.ProjectToNS(util.ToSit(project)+"-"+application) {
+			continue
+		}
 		pd := &common.PodDetail{
 			Name:       podlist[i].Name,
 			Namespace:  podlist[i].Namespace,
@@ -112,10 +145,7 @@ func (s *Service) GetSitPodByApplication(ctx context.Context, project string, ap
 		podDetails = append(podDetails, pd)
 	}
 
-	return &common.PodByApplication{
-		Application: project,
-		Pods:        podDetails,
-	}, nil
+	return podDetails, nil
 }
 
 func (s *Service) GetPodLog(ctx context.Context, project string, podname string) ([]byte, error) {
