@@ -6,6 +6,7 @@ import (
 	"cd_platform/util"
 	"errors"
 	"github.com/go-resty/resty/v2"
+	"strings"
 )
 
 type Client struct {
@@ -32,6 +33,10 @@ func (c *Client) ListRepo(project string) ([]*common.RepoItem, error) {
 	if err != nil {
 		util.Logger.Errorf("harbor.ListRepo err: %s", err)
 		return nil, err
+	}
+
+	for i := 0; i < len(repolist); i++ {
+		repolist[i].Name = strings.Split(repolist[i].Name, "/")[1]
 	}
 
 	return repolist, nil
