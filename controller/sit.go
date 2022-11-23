@@ -2,7 +2,6 @@ package controller
 
 import (
 	"cd_platform/common"
-	"cd_platform/ext"
 	"cd_platform/pkg/sit"
 	"cd_platform/pkg/watch"
 	"cd_platform/util"
@@ -18,7 +17,7 @@ type SitController struct {
 func NewSitController() *SitController {
 	return &SitController{
 		SitService:   sit.NewService(),
-		WatchService: watch.NewService(ext.MiddleWare),
+		WatchService: watch.NewService(),
 	}
 }
 

@@ -4,6 +4,7 @@ import (
 	"cd_platform/conf"
 	"cd_platform/mid"
 	"cd_platform/pkg"
+	"cd_platform/pkg/watch"
 	"cd_platform/util"
 )
 
@@ -14,4 +15,5 @@ func InitApp() {
 	conf.InitConf()
 	MiddleWare = mid.InitMiddleware(conf.Conf)
 	pkg.NewService(MiddleWare)
+	watch.Init(MiddleWare)
 }

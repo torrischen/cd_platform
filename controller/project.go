@@ -19,7 +19,7 @@ type ProjectController struct {
 func NewProjectController() *ProjectController {
 	return &ProjectController{
 		ExecService:  pkg.ExService,
-		WatchService: watch.NewService(ext.MiddleWare),
+		WatchService: watch.NewService(),
 	}
 }
 

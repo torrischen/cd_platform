@@ -11,6 +11,8 @@ import (
 	networkv1 "k8s.io/api/networking/v1"
 )
 
+var watchService *Service
+
 type WatchService interface {
 	GetDeploymentByName(ctx context.Context, ns string, name string) (*appsv1.Deployment, error)
 	GetDeploymentByLabel(ctx context.Context, cond *common.SelectorCondList) ([]*appsv1.Deployment, error)
@@ -35,8 +37,12 @@ type Service struct {
 	Mid *mid.Middle
 }
 
-func NewService(mid *mid.Middle) *Service {
-	return &Service{
+func Init(mid *mid.Middle) {
+	watchService = &Service{
 		Mid: mid,
 	}
+}
+
+func NewService() *Service {
+	return watchService
 }
