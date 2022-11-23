@@ -70,11 +70,24 @@ func (ctrl *ProjectController) GetProjectList(c *gin.Context) {
 	ctrl.Jsonify(c, 200, ret, "success")
 }
 
-func (ctrl *ProjectController) GetRepoList(c *gin.Context) {
+func (ctrl *ProjectController) GetImageList(c *gin.Context) {
 	project := c.Param("project")
 	repo := c.Param("repo")
 
 	ret, err := ext.MiddleWare.HarborClient.GetRepoTag(project, repo)
+	if err != nil {
+		util.Logger.Errorf("controller.GetImageList err: %s", err)
+		ctrl.Jsonify(c, 400, struct{}{}, err.Error())
+		return
+	}
+
+	ctrl.Jsonify(c, 200, ret, "success")
+}
+
+func (ctrl *ProjectController) GetRepoList(c *gin.Context) {
+	project := c.Param("project")
+
+	ret, err := ext.MiddleWare.HarborClient.ListRepo(project)
 	if err != nil {
 		util.Logger.Errorf("controller.GetRepoList err: %s", err)
 		ctrl.Jsonify(c, 400, struct{}{}, err.Error())
