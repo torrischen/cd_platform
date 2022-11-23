@@ -3,8 +3,8 @@ package ext
 import (
 	"cd_platform/conf"
 	"cd_platform/mid"
-	"cd_platform/pkg/watch"
 	"cd_platform/pkg/workload"
+	"cd_platform/pkg/workload/watch"
 	"cd_platform/util"
 )
 

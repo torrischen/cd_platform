@@ -3,8 +3,8 @@ package controller
 import (
 	"cd_platform/common"
 	"cd_platform/ext"
-	"cd_platform/pkg/watch"
 	"cd_platform/pkg/workload"
+	"cd_platform/pkg/workload/watch"
 	"cd_platform/util"
 
 	"github.com/gin-gonic/gin"
