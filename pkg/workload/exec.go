@@ -1,4 +1,4 @@
-package pkg
+package workload
 
 import (
 	"cd_platform/common"
@@ -8,7 +8,7 @@ import (
 	corev1 "k8s.io/api/core/v1"
 )
 
-var ExService *Service
+var exService *Service
 
 type ExecService interface {
 	CreateDeployment(ctx context.Context, project string, deployment *appsv1.Deployment) error
@@ -30,8 +30,12 @@ type Service struct {
 	Mid *mid.Middle
 }
 
-func NewService(mid *mid.Middle) {
-	ExService = &Service{
+func Init(mid *mid.Middle) {
+	exService = &Service{
 		Mid: mid,
 	}
+}
+
+func NewService() *Service {
+	return exService
 }

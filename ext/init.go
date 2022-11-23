@@ -3,8 +3,8 @@ package ext
 import (
 	"cd_platform/conf"
 	"cd_platform/mid"
-	"cd_platform/pkg"
 	"cd_platform/pkg/watch"
+	"cd_platform/pkg/workload"
 	"cd_platform/util"
 )
 
@@ -14,6 +14,6 @@ func InitApp() {
 	util.InitLogger()
 	conf.InitConf()
 	MiddleWare = mid.InitMiddleware(conf.Conf)
-	pkg.NewService(MiddleWare)
+	workload.Init(MiddleWare)
 	watch.Init(MiddleWare)
 }

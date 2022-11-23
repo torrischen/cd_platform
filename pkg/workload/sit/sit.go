@@ -2,7 +2,7 @@ package sit
 
 import (
 	"cd_platform/common"
-	"cd_platform/pkg"
+	"cd_platform/pkg/workload"
 	"context"
 	appsv1 "k8s.io/api/apps/v1"
 	corev1 "k8s.io/api/core/v1"
@@ -24,11 +24,11 @@ type SitService interface {
 }
 
 type Service struct {
-	Exec pkg.ExecService
+	Exec workload.ExecService
 }
 
 func NewService() *Service {
 	return &Service{
-		Exec: pkg.ExService,
+		Exec: workload.NewService(),
 	}
 }

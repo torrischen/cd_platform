@@ -1,4 +1,4 @@
-package pkg
+package workload
 
 import (
 	"cd_platform/common"
