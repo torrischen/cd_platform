@@ -10,8 +10,49 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
+func (s *Service) CreateProjectIngress(ctx context.Context, project string) error {
+	pathType := networkv1.PathType("Prefix")
+	dftpath := networkv1.HTTPIngressPath{
+		Path:     "/default",
+		PathType: &pathType,
+		Backend: networkv1.IngressBackend{
+			Service: &networkv1.IngressServiceBackend{
+				Name: "default",
+				Port: networkv1.ServiceBackendPort{
+					Number: 1,
+				},
+			},
+		},
+	}
+
+	ingrule := networkv1.IngressRule{
+		IngressRuleValue: networkv1.IngressRuleValue{
+			HTTP: &networkv1.HTTPIngressRuleValue{
+				Paths: []networkv1.HTTPIngressPath{dftpath},
+			},
+		},
+	}
+
+	ing := &networkv1.Ingress{
+		Spec: networkv1.IngressSpec{
+			Rules: []networkv1.IngressRule{
+				ingrule,
+			},
+		},
+	}
+	ing.Name = util.ProjectToNS(project)
+
+	_, err := s.Mid.K8sclient.ClientSet.NetworkingV1().Ingresses(util.ProjectToNS(project)).Create(ctx, ing, metav1.CreateOptions{})
+	if err != nil {
+		util.Logger.Errorf("ExecService.CreateProjectIngress err: %s", err)
+		return err
+	}
+
+	return nil
+}
+
 func (s *Service) InsertIngressRule(ctx context.Context, rule *common.IngressRule) error {
-	ing, err := s.Mid.K8sclient.IngressLister.Ingresses("default").Get("cd-ingress")
+	ing, err := s.Mid.K8sclient.IngressLister.Ingresses(util.ProjectToNS(rule.Project)).Get(util.ProjectToNS(rule.Project))
 	if err != nil {
 		util.Logger.Errorf("ExecService.InsertIngressRule err: %s", err)
 		return err
@@ -32,7 +73,7 @@ func (s *Service) InsertIngressRule(ctx context.Context, rule *common.IngressRul
 	}
 
 	ing.Spec.Rules[0].HTTP.Paths = append(ing.Spec.Rules[0].HTTP.Paths, newIngRule)
-	_, err = s.Mid.K8sclient.ClientSet.NetworkingV1().Ingresses("default").Update(ctx, ing, metav1.UpdateOptions{})
+	_, err = s.Mid.K8sclient.ClientSet.NetworkingV1().Ingresses(util.ProjectToNS(rule.Project)).Update(ctx, ing, metav1.UpdateOptions{})
 	if err != nil {
 		util.Logger.Errorf("ExecService.InsertIngressRule err: %s", err)
 		return err
@@ -42,7 +83,7 @@ func (s *Service) InsertIngressRule(ctx context.Context, rule *common.IngressRul
 }
 
 func (s *Service) DeleteIngressRule(ctx context.Context, project string, application string) error {
-	ing, err := s.Mid.K8sclient.IngressLister.Ingresses("default").Get("cd-ingress")
+	ing, err := s.Mid.K8sclient.IngressLister.Ingresses(util.ProjectToNS(project)).Get(util.ProjectToNS(project))
 	if err != nil {
 		util.Logger.Errorf("ExecService.DeleteIngressRule err: %s", err)
 		return err
@@ -56,7 +97,7 @@ func (s *Service) DeleteIngressRule(ctx context.Context, project string, applica
 	}
 	ing.Spec.Rules[0].HTTP.Paths = newIngRule
 
-	_, err = s.Mid.K8sclient.ClientSet.NetworkingV1().Ingresses("default").Update(ctx, ing, metav1.UpdateOptions{})
+	_, err = s.Mid.K8sclient.ClientSet.NetworkingV1().Ingresses(util.ProjectToNS(project)).Update(ctx, ing, metav1.UpdateOptions{})
 	if err != nil {
 		util.Logger.Errorf("ExecService.DeleteIngressRule err: %s", err)
 		return err
@@ -65,8 +106,8 @@ func (s *Service) DeleteIngressRule(ctx context.Context, project string, applica
 	return nil
 }
 
-func (s *Service) DeleteSpecifiedIngressRule(ctx context.Context, path string) error {
-	ing, err := s.Mid.K8sclient.IngressLister.Ingresses("default").Get("cd-ingress")
+func (s *Service) DeleteSpecifiedIngressRule(ctx context.Context, project string, path string) error {
+	ing, err := s.Mid.K8sclient.IngressLister.Ingresses(util.ProjectToNS(project)).Get(util.ProjectToNS(project))
 	if err != nil {
 		util.Logger.Errorf("ExecService.DeleteSpecifiedIngressRule err: %s", err)
 		return err
@@ -81,7 +122,7 @@ func (s *Service) DeleteSpecifiedIngressRule(ctx context.Context, path string) e
 	}
 	ing.Spec.Rules[0].HTTP.Paths = newIngRule
 
-	_, err = s.Mid.K8sclient.ClientSet.NetworkingV1().Ingresses("default").Update(ctx, ing, metav1.UpdateOptions{})
+	_, err = s.Mid.K8sclient.ClientSet.NetworkingV1().Ingresses(util.ProjectToNS(project)).Update(ctx, ing, metav1.UpdateOptions{})
 	if err != nil {
 		util.Logger.Errorf("ExecService.DeleteSpecifiedIngressRule err: %s", err)
 		return err

@@ -63,7 +63,8 @@ type GetProjectListQueryArgs struct {
 }
 
 type DeleteSpecifiedIngressRuleArgs struct {
-	Path string `json:"path"`
+	Project string `json:"project"`
+	Path    string `json:"path"`
 }
 
 type PatchReplicaArgs struct {

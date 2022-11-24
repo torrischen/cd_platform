@@ -118,36 +118,6 @@ func (s *Service) GetPodByProject(ctx context.Context, project string) ([]*commo
 	return ret, nil
 }
 
-func (s *Service) GetSitPodByApplication(ctx context.Context, project string, application string) ([]*common.PodDetail, error) {
-	set := make(map[string]string)
-	set["app"] = project
-	selector := labels.SelectorFromSet(set)
-	podlist, err := s.Mid.K8sclient.PodLister.Pods(util.ProjectToNS(util.ToSit(project) + "-" + application)).List(selector)
-	if err != nil {
-		util.Logger.Errorf("watch.GetPodByApplication err: %s", err)
-		return nil, err
-	}
-
-	podDetails := make([]*common.PodDetail, 0)
-	for i := 0; i < len(podlist); i++ {
-		if podlist[i].Namespace != util.ProjectToNS(util.ToSit(project)+"-"+application) {
-			continue
-		}
-		pd := &common.PodDetail{
-			Name:       podlist[i].Name,
-			Namespace:  podlist[i].Namespace,
-			Image:      podlist[i].Spec.Containers[0].Image,
-			CreateTime: podlist[i].CreationTimestamp.Format("2006-01-02 15:04:05"),
-			HostIp:     podlist[i].Status.HostIP,
-			PodIp:      podlist[i].Status.PodIP,
-			Status:     &podlist[i].Status.ContainerStatuses[0].State,
-		}
-		podDetails = append(podDetails, pd)
-	}
-
-	return podDetails, nil
-}
-
 func (s *Service) GetPodLog(ctx context.Context, project string, podname string) ([]byte, error) {
 	log := s.Mid.K8sclient.ClientSet.CoreV1().Pods(util.ProjectToNS(project)).GetLogs(podname, &corev1.PodLogOptions{})
 	podlog, err := log.Stream(ctx)
@@ -159,23 +129,6 @@ func (s *Service) GetPodLog(ctx context.Context, project string, podname string)
 	logbody, err := ioutil.ReadAll(podlog)
 	if err != nil {
 		util.Logger.Errorf("watch.GetPodLog err: %s", err)
-		return nil, err
-	}
-
-	return logbody, nil
-}
-
-func (s *Service) GetSitPodLog(ctx context.Context, project string, application string, podname string) ([]byte, error) {
-	log := s.Mid.K8sclient.ClientSet.CoreV1().Pods(util.ProjectToNS(util.ToSit(project)+"-"+application)).GetLogs(podname, &corev1.PodLogOptions{})
-	podlog, err := log.Stream(ctx)
-	if err != nil {
-		util.Logger.Errorf("watch.GetSitPodLog err: %s", err)
-		return nil, err
-	}
-
-	logbody, err := ioutil.ReadAll(podlog)
-	if err != nil {
-		util.Logger.Errorf("watch.GetSitPodLog err: %s", err)
 		return nil, err
 	}
 

@@ -8,7 +8,6 @@ func InitController() *gin.Engine {
 
 	_ = NewBaseController()
 	projectController := NewProjectController()
-	sitController := NewSitController()
 
 	pc := engine.Group("/api/dev/project")
 	pc.POST("/init", projectController.InitProject)
@@ -26,16 +25,6 @@ func InitController() *gin.Engine {
 	pc.GET("/:project/pod/:podname/log", projectController.GetPodLog)
 	pc.POST("/application/ingress/delete", projectController.DeleteSpecifiedIngressRule)
 	pc.POST("/application/replica/patch", projectController.PatchApplicationReplica)
-
-	sit := engine.Group("/api/dev/sit")
-	sit.POST("/application/create", sitController.CreateSitApplication)
-	sit.POST("/application/deploy", sitController.DeploySitApplication)
-	sit.POST("/application/destroy", sitController.DestroySitApplication)
-	sit.GET("/project/:project/application/:application/detail", sitController.GetSitApplicationDetails)
-	sit.POST("/application/ingress/insert", sitController.InsertSitApplicationIngressPath)
-	sit.GET("/project/:project/application/:application/ingress", sitController.GetSitApplicationIngress)
-	sit.GET("/project/:project/application/:application/pod/:podname/log", sitController.GetSitPodLog)
-	sit.POST("/application/ingress/delete", sitController.DeleteSpecifiedSitIngressRule)
 
 	return engine
 }

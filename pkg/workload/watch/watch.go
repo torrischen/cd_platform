@@ -27,11 +27,8 @@ type WatchService interface {
 	GetNamespaceByName(ctx context.Context, ns string) (*corev1.Namespace, error)
 	GetPodByApplication(ctx context.Context, project string, application string) ([]*common.PodDetail, error)
 	GetPodByProject(ctx context.Context, project string) ([]*common.PodByApplication, error)
-	GetSitPodByApplication(ctx context.Context, project string, application string) ([]*common.PodDetail, error)
 	GetIngressByApplication(ctx context.Context, project string, application string) ([]*common.IngressRule, error)
-	GetSitIngressByApplication(ctx context.Context, project string, application string) ([]*common.SitIngressRule, error)
 	GetPodLog(ctx context.Context, project string, podname string) ([]byte, error)
-	GetSitPodLog(ctx context.Context, project string, application string, podname string) ([]byte, error)
 	GetDeploymentListByProject(ctx context.Context, project string) ([]string, error)
 }
 

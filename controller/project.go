@@ -49,6 +49,12 @@ func (ctrl *ProjectController) InitProject(c *gin.Context) {
 		return
 	}
 
+	if err := ctrl.ExecService.CreateProjectIngress(c, args.Name); err != nil {
+		util.Logger.Errorf("controller.InitProject err: %s", err)
+		ctrl.Jsonify(c, 400, struct{}{}, err.Error())
+		return
+	}
+
 	ctrl.Jsonify(c, 200, struct{}{}, "success")
 }
 
@@ -265,7 +271,7 @@ func (ctrl *ProjectController) DeleteSpecifiedIngressRule(c *gin.Context) {
 		return
 	}
 
-	err := ctrl.ExecService.DeleteSpecifiedIngressRule(c, args.Path)
+	err := ctrl.ExecService.DeleteSpecifiedIngressRule(c, args.Project, args.Path)
 	if err != nil {
 		util.Logger.Errorf("controller.DeleteSpecifiedIngressRule err: %s", err)
 		ctrl.Jsonify(c, 400, struct{}{}, err.Error())
