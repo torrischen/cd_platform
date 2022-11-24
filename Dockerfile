@@ -13,4 +13,4 @@ FROM alpine
 COPY --from=builder /cd/server .
 COPY --from=builder /cd/conf/kubecfg.yaml /conf/kubecfg.yaml
 EXPOSE 8080
-CMD ./server
+CMD ["/bin/bash", "-c", "./server"]
