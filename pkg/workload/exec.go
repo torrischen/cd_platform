@@ -25,6 +25,7 @@ type ExecService interface {
 	UpdateDeploymentImage(ctx context.Context, project string, application string, image string) error
 	PatchDeploymentReplica(ctx context.Context, project string, application string, replica int32) error
 	CreateProjectIngress(ctx context.Context, project string) error
+	RestartDeployment(ctx context.Context, project string, application string) error
 }
 
 type Service struct {

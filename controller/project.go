@@ -6,7 +6,6 @@ import (
 	"cd_platform/pkg/workload"
 	"cd_platform/pkg/workload/watch"
 	"cd_platform/util"
-
 	"github.com/gin-gonic/gin"
 )
 
@@ -292,6 +291,24 @@ func (ctrl *ProjectController) PatchApplicationReplica(c *gin.Context) {
 	err := ctrl.ExecService.PatchDeploymentReplica(c, args.Project, args.Application, args.Replica)
 	if err != nil {
 		util.Logger.Errorf("controller.PatchApplicationReplica err: %s", err)
+		ctrl.Jsonify(c, 400, struct{}{}, err.Error())
+		return
+	}
+
+	ctrl.Jsonify(c, 200, struct{}{}, "success")
+}
+
+func (ctrl *ProjectController) RestartApplication(c *gin.Context) {
+	var args common.RestartDeploymentArgs
+	if err := c.BindJSON(&args); err != nil {
+		util.Logger.Errorf("controller.RestartApplication err: %s", err)
+		ctrl.Jsonify(c, 400, struct{}{}, err.Error())
+		return
+	}
+
+	err := ctrl.ExecService.RestartDeployment(c, args.Project, args.Application)
+	if err != nil {
+		util.Logger.Errorf("controller.RestartApplication err: %s", err)
 		ctrl.Jsonify(c, 400, struct{}{}, err.Error())
 		return
 	}

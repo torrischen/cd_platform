@@ -72,3 +72,8 @@ type PatchReplicaArgs struct {
 	Application string `json:"application"`
 	Replica     int32  `json:"replica"`
 }
+
+type RestartDeploymentArgs struct {
+	Project     string `json:"project"`
+	Application string `json:"application"`
+}

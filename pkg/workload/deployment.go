@@ -6,6 +6,7 @@ import (
 	appsv1 "k8s.io/api/apps/v1"
 	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/apimachinery/pkg/util/json"
+	"time"
 
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
@@ -60,6 +61,33 @@ func (s *Service) PatchDeploymentReplica(ctx context.Context, project string, ap
 	_, err = s.Mid.K8sclient.ClientSet.AppsV1().Deployments(util.ProjectToNS(project)).Patch(ctx, application, types.MergePatchType, replicapatch, metav1.PatchOptions{})
 	if err != nil {
 		util.Logger.Errorf("exec.PatchDeploymentReplica err: %s", err)
+		return err
+	}
+
+	return nil
+}
+
+func (s *Service) RestartDeployment(ctx context.Context, project string, application string) error {
+	patchdata := map[string]interface{}{
+		"spec": map[string]interface{}{
+			"template": map[string]interface{}{
+				"metadata": map[string]interface{}{
+					"annotations": map[string]interface{}{
+						"restarted_at": time.Now().Format("2006-01-02 15:04:05"),
+					},
+				},
+			},
+		},
+	}
+	patchjson, err := json.Marshal(patchdata)
+	if err != nil {
+		util.Logger.Errorf("workload.RestartDeployemnt err: %s", err)
+		return err
+	}
+
+	_, err = s.Mid.K8sclient.ClientSet.AppsV1().Deployments(util.ProjectToNS(project)).Patch(ctx, application, types.MergePatchType, patchjson, metav1.PatchOptions{})
+	if err != nil {
+		util.Logger.Errorf("workload.RestartDeployemnt err: %s", err)
 		return err
 	}
 
