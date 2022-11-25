@@ -186,7 +186,7 @@ func (ctrl *ProjectController) DeployApplication(c *gin.Context) {
 		return
 	}
 
-	if err := ctrl.ExecService.UpdateDeployment(c, args.Project, args.Application, args.Image); err != nil {
+	if err := ctrl.ExecService.UpdateDeploymentImage(c, args.Project, args.Application, args.Image); err != nil {
 		util.Logger.Errorf("controller.DeployApplication err: %s", err)
 		ctrl.Jsonify(c, 400, struct{}{}, err.Error())
 		return

@@ -22,7 +22,7 @@ type ExecService interface {
 	InsertIngressRule(ctx context.Context, rule *common.IngressRule) error
 	DeleteIngressRule(ctx context.Context, project string, application string) error
 	DeleteSpecifiedIngressRule(ctx context.Context, project string, path string) error
-	UpdateDeployment(ctx context.Context, project string, application string, image string) error
+	UpdateDeploymentImage(ctx context.Context, project string, application string, image string) error
 	PatchDeploymentReplica(ctx context.Context, project string, application string, replica int32) error
 	CreateProjectIngress(ctx context.Context, project string) error
 }
