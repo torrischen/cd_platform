@@ -4,6 +4,7 @@ import (
 	"cd_platform/common"
 	"cd_platform/util"
 	"context"
+	"errors"
 	"strings"
 
 	networkv1 "k8s.io/api/networking/v1"
@@ -52,6 +53,10 @@ func (s *Service) CreateProjectIngress(ctx context.Context, project string) erro
 }
 
 func (s *Service) InsertIngressRule(ctx context.Context, rule *common.IngressRule) error {
+	//ing, err := s.Mid.K8sclient.ClientSet.NetworkingV1().Ingresses(util.ProjectToNS(rule.Project)).Get(ctx, util.ProjectToNS(rule.Project), metav1.GetOptions{})
+	if rule.Port > 65535 || rule.Port < 1 {
+		return errors.New("port out of range")
+	}
 	ing, err := s.Mid.K8sclient.IngressLister.Ingresses(util.ProjectToNS(rule.Project)).Get(util.ProjectToNS(rule.Project))
 	if err != nil {
 		util.Logger.Errorf("ExecService.InsertIngressRule err: %s", err)
