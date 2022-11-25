@@ -77,3 +77,9 @@ type RestartDeploymentArgs struct {
 	Project     string `json:"project"`
 	Application string `json:"application"`
 }
+
+type SetEnvArgs struct {
+	Project     string          `json:"project"`
+	Application string          `json:"application"`
+	Envs        []corev1.EnvVar `json:"envs"`
+}

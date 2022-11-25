@@ -27,6 +27,8 @@ func InitController() *gin.Engine {
 	pc.POST("/application/replica/patch", projectController.PatchApplicationReplica)
 	pc.POST("/application/restart", projectController.RestartApplication)
 	pc.GET("/:project/application/:application/yaml", projectController.GetApplicationYaml)
+	pc.GET("/:project/application/:application/envs", projectController.GetApplicationEnvs)
+	pc.POST("/application/env/set", projectController.SetApplicationEnvs)
 
 	return engine
 }

@@ -329,3 +329,35 @@ func (ctrl *ProjectController) GetApplicationYaml(c *gin.Context) {
 
 	ctrl.Jsonify(c, 200, ret, "success")
 }
+
+func (ctrl *ProjectController) SetApplicationEnvs(c *gin.Context) {
+	var args common.SetEnvArgs
+	if err := c.BindJSON(&args); err != nil {
+		util.Logger.Errorf("controller.SetApplicationEnvs err: %s", err)
+		ctrl.Jsonify(c, 400, struct{}{}, err.Error())
+		return
+	}
+
+	err := ctrl.ExecService.SetDeploymentEnv(c, args.Project, args.Application, args.Envs)
+	if err != nil {
+		util.Logger.Errorf("controller.SetApplicationEnvs err: %s", err)
+		ctrl.Jsonify(c, 400, struct{}{}, err.Error())
+		return
+	}
+
+	ctrl.Jsonify(c, 200, struct{}{}, "success")
+}
+
+func (ctrl *ProjectController) GetApplicationEnvs(c *gin.Context) {
+	project := c.Param("project")
+	appliation := c.Param("application")
+
+	ret, err := ctrl.WatchService.GetDeploymentEnvs(c, project, appliation)
+	if err != nil {
+		util.Logger.Errorf("controller.GetApplicationEnvs err: %s", err)
+		ctrl.Jsonify(c, 400, struct{}{}, err.Error())
+		return
+	}
+
+	ctrl.Jsonify(c, 200, ret, "success")
+}

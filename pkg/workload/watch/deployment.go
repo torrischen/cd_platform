@@ -4,6 +4,7 @@ import (
 	"cd_platform/common"
 	"cd_platform/util"
 	"encoding/json"
+	corev1 "k8s.io/api/core/v1"
 	"sigs.k8s.io/yaml"
 
 	"context"
@@ -72,4 +73,14 @@ func (s *Service) GetDeploymentYaml(ctx context.Context, project string, applica
 	}
 
 	return util.ByteToString(y), nil
+}
+
+func (s *Service) GetDeploymentEnvs(ctx context.Context, project string, application string) ([]corev1.EnvVar, error) {
+	dep, err := s.Mid.K8sclient.DeploymentLister.Deployments(util.ProjectToNS(project)).Get(application);
+	if err != nil {
+		util.Logger.Errorf("watch.GetDeploymentEnvs err: %s", err)
+		return nil, err
+	}
+
+	return dep.Spec.Template.Spec.Containers[0].Env, nil
 }

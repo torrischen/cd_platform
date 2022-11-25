@@ -4,6 +4,7 @@ import (
 	"cd_platform/util"
 	"context"
 	appsv1 "k8s.io/api/apps/v1"
+	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/apimachinery/pkg/util/json"
 	"time"
@@ -81,13 +82,31 @@ func (s *Service) RestartDeployment(ctx context.Context, project string, applica
 	}
 	patchjson, err := json.Marshal(patchdata)
 	if err != nil {
-		util.Logger.Errorf("workload.RestartDeployemnt err: %s", err)
+		util.Logger.Errorf("workload.RestartDeployment err: %s", err)
 		return err
 	}
 
 	_, err = s.Mid.K8sclient.ClientSet.AppsV1().Deployments(util.ProjectToNS(project)).Patch(ctx, application, types.MergePatchType, patchjson, metav1.PatchOptions{})
 	if err != nil {
-		util.Logger.Errorf("workload.RestartDeployemnt err: %s", err)
+		util.Logger.Errorf("workload.RestartDeployment err: %s", err)
+		return err
+	}
+
+	return nil
+}
+
+func (s *Service) SetDeploymentEnv(ctx context.Context, project string, application string, envs []corev1.EnvVar) error {
+	dep, err := s.Mid.K8sclient.DeploymentLister.Deployments(util.ProjectToNS(project)).Get(application)
+	if err != nil {
+		util.Logger.Errorf("workload.SetDeploymentEnv err: %s", err)
+		return err
+	}
+
+	dep.Spec.Template.Spec.Containers[0].Env = envs
+
+	_, err = s.Mid.K8sclient.ClientSet.AppsV1().Deployments(util.ProjectToNS(project)).Update(ctx, dep, metav1.UpdateOptions{})
+	if err != nil {
+		util.Logger.Errorf("workload.SetDeploymentEnv err: %s", err)
 		return err
 	}
 

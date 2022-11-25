@@ -29,6 +29,7 @@ type WatchService interface {
 	GetIngressByApplication(ctx context.Context, project string, application string) ([]*common.IngressRule, error)
 	GetPodLog(ctx context.Context, project string, podname string) ([]byte, error)
 	GetDeploymentListByProject(ctx context.Context, project string) ([]string, error)
+	GetDeploymentEnvs(ctx context.Context, project string, application string) ([]corev1.EnvVar, error)
 	GetDeploymentYaml(ctx context.Context, project string, application string) (string, error)
 }
 
