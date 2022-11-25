@@ -7,6 +7,7 @@ import (
 	"cd_platform/pkg/workload/watch"
 	"cd_platform/util"
 	"github.com/gin-gonic/gin"
+	"sort"
 )
 
 type ProjectController struct {
@@ -217,6 +218,10 @@ func (ctrl *ProjectController) GetApplicationDetailsByApplication(c *gin.Context
 		ctrl.Jsonify(c, 400, struct{}{}, err.Error())
 		return
 	}
+
+	sort.Slice(ret, func(i, j int) bool {
+		return ret[i].Name < ret[j].Name
+	})
 
 	ctrl.Jsonify(c, 200, ret, "success")
 }
