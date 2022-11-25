@@ -3,6 +3,8 @@ package watch
 import (
 	"cd_platform/common"
 	"cd_platform/util"
+	"encoding/json"
+	"sigs.k8s.io/yaml"
 
 	"context"
 
@@ -48,4 +50,26 @@ func (s *Service) GetDeploymentListByProject(ctx context.Context, project string
 	}
 
 	return ret, nil
+}
+
+func (s *Service) GetDeploymentYaml(ctx context.Context, project string, application string) (string, error) {
+	dep, err := s.Mid.K8sclient.DeploymentLister.Deployments(util.ProjectToNS(project)).Get(application)
+	if err != nil {
+		util.Logger.Errorf("watch.GetDeploymentYaml err: %s", err)
+		return "", err
+	}
+
+	js, err := json.Marshal(dep)
+	if err != nil {
+		util.Logger.Errorf("watch.GetDeploymentYaml err: %s", err)
+		return "", err
+	}
+
+	y, err := yaml.JSONToYAML(js)
+	if err != nil {
+		util.Logger.Errorf("watch.GetDeploymentYaml err: %s", err)
+		return "", err
+	}
+
+	return util.ByteToString(y), nil
 }

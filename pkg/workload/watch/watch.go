@@ -3,7 +3,6 @@ package watch
 import (
 	"cd_platform/common"
 	"cd_platform/mid"
-
 	"context"
 
 	appsv1 "k8s.io/api/apps/v1"
@@ -30,6 +29,7 @@ type WatchService interface {
 	GetIngressByApplication(ctx context.Context, project string, application string) ([]*common.IngressRule, error)
 	GetPodLog(ctx context.Context, project string, podname string) ([]byte, error)
 	GetDeploymentListByProject(ctx context.Context, project string) ([]string, error)
+	GetDeploymentYaml(ctx context.Context, project string, application string) (string, error)
 }
 
 type Service struct {

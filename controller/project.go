@@ -315,3 +315,17 @@ func (ctrl *ProjectController) RestartApplication(c *gin.Context) {
 
 	ctrl.Jsonify(c, 200, struct{}{}, "success")
 }
+
+func (ctrl *ProjectController) GetApplicationYaml(c *gin.Context) {
+	project := c.Param("project")
+	application := c.Param("application")
+
+	ret, err := ctrl.WatchService.GetDeploymentYaml(c, project, application)
+	if err != nil {
+		util.Logger.Errorf("controller.GetApplicationYaml err: %s", err)
+		ctrl.Jsonify(c, 400, struct{}{}, err.Error())
+		return
+	}
+
+	ctrl.Jsonify(c, 200, ret, "success")
+}
