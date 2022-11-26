@@ -93,7 +93,7 @@ type AddConfigToConfigmapArgs struct {
 	Project     string `json:"project"`
 	Application string `json:"application"`
 	ConfigName  string `json:"config_name"`
-	Data        []byte `json:"data"`
+	Data        string `json:"data"`
 }
 
 type DeleteSpecifiedConfigArgs struct {
@@ -106,5 +106,5 @@ type UpdateSpecifiedConfigArgs struct {
 	Project     string `json:"project"`
 	Application string `json:"application"`
 	ConfigName  string `json:"config_name"`
-	NewVal      []byte `json:"new_val"`
+	NewVal      string `json:"new_val"`
 }

@@ -4,7 +4,6 @@ import (
 	"cd_platform/common"
 	"cd_platform/util"
 	"context"
-	"encoding/base64"
 )
 
 func (s *Service) GetApplicationConfigList(ctx context.Context, project string, application string) (*common.ConfigList, error) {
@@ -33,14 +32,9 @@ func (s *Service) GetApplicationConfigDetail(ctx context.Context, project string
 
 	ret := make([]*common.ConfigDetail, 0)
 	for k, v := range cfm.Data {
-		s, err := base64.RawStdEncoding.DecodeString(v)
-		if err != nil {
-			util.Logger.Errorf("watch.GetApplicationConfigmapDetail err: %s", err)
-			continue
-		}
 		tmp := &common.ConfigDetail{
 			ConfigName:  k,
-			ConfigValue: s,
+			ConfigValue: v,
 		}
 		ret = append(ret, tmp)
 	}

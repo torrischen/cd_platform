@@ -28,10 +28,10 @@ type ExecService interface {
 	RestartDeployment(ctx context.Context, project string, application string) error
 	SetDeploymentEnv(ctx context.Context, project string, application string, envs []corev1.EnvVar) error
 	CreateApplicationConfigmap(ctx context.Context, project string, application string) error
-	AddConfigToConfigmap(ctx context.Context, project string, application string, configName string, data []byte) error
+	AddConfigToConfigmap(ctx context.Context, project string, application string, configName string, data string) error
 	DeleteConfigmap(ctx context.Context, project string, application string) error
 	DeleteSpecifiedConfig(ctx context.Context, project string, application string, configName string) error
-	UpdateSpecifiedConfig(ctx context.Context, project string, application string, configName string, newVal []byte) error
+	UpdateSpecifiedConfig(ctx context.Context, project string, application string, configName string, newVal string) error
 }
 
 type Service struct {

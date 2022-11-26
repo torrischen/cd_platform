@@ -3,7 +3,6 @@ package workload
 import (
 	"cd_platform/util"
 	"context"
-	"encoding/base64"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
@@ -55,7 +54,7 @@ func (s *Service) DeleteConfigmap(ctx context.Context, project string, applicati
 	return s.Mid.K8sclient.ClientSet.CoreV1().ConfigMaps(util.ProjectToNS(project)).Delete(ctx, application, metav1.DeleteOptions{})
 }
 
-func (s *Service) AddConfigToConfigmap(ctx context.Context, project string, application string, configName string, data []byte) error {
+func (s *Service) AddConfigToConfigmap(ctx context.Context, project string, application string, configName string, data string) error {
 	cfm, err := s.Mid.K8sclient.CMLister.ConfigMaps(util.ProjectToNS(project)).Get(application)
 	if err != nil {
 		util.Logger.Errorf("workload.AddConfigToConfigmap err: %s", err)
@@ -65,7 +64,7 @@ func (s *Service) AddConfigToConfigmap(ctx context.Context, project string, appl
 	if cfm.Data == nil {
 		cfm.Data = make(map[string]string)
 	}
-	cfm.Data[configName] = base64.RawStdEncoding.EncodeToString(data)
+	cfm.Data[configName] = data
 
 	_, err = s.Mid.K8sclient.ClientSet.CoreV1().ConfigMaps(util.ProjectToNS(project)).Update(ctx, cfm, metav1.UpdateOptions{})
 	if err != nil {
@@ -94,18 +93,18 @@ func (s *Service) DeleteSpecifiedConfig(ctx context.Context, project string, app
 	return nil
 }
 
-func (s *Service) UpdateSpecifiedConfig(ctx context.Context, project string, application string, configName string, newVal []byte) error {
+func (s *Service) UpdateSpecifiedConfig(ctx context.Context, project string, application string, configName string, newVal string) error {
 	cfm, err := s.Mid.K8sclient.CMLister.ConfigMaps(util.ProjectToNS(project)).Get(application)
 	if err != nil {
-		util.Logger.Errorf("workload.UpdateSpecifiedConfig err: %s", err)
+		util.Logger.Errorf("workload.UpdateSpecifiedConfig getcfm err: %s", err)
 		return err
 	}
 
-	cfm.Data[configName] = base64.RawStdEncoding.EncodeToString(newVal)
+	cfm.Data[configName] = newVal
 
 	_, err = s.Mid.K8sclient.ClientSet.CoreV1().ConfigMaps(util.ProjectToNS(project)).Update(ctx, cfm, metav1.UpdateOptions{})
 	if err != nil {
-		util.Logger.Errorf("workload.UpdateSpecifiedConfig err: %s", err)
+		util.Logger.Errorf("workload.UpdateSpecifiedConfig update err: %s", err)
 		return err
 	}
 

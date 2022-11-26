@@ -38,5 +38,5 @@ type ConfigList struct {
 
 type ConfigDetail struct {
 	ConfigName  string `json:"config_name"`
-	ConfigValue []byte `json:"config_value"`
+	ConfigValue string `json:"config_value"`
 }
