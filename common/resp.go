@@ -31,3 +31,12 @@ type PodDetail struct {
 	PodIp      string                 `json:"pod_ip"`
 	Status     *corev1.ContainerState `json:"status"`
 }
+
+type ConfigList struct {
+	ConfigNameList []string `json:"config_name_list"`
+}
+
+type ConfigDetail struct {
+	ConfigName  string `json:"config_name"`
+	ConfigValue []byte `json:"config_value"`
+}

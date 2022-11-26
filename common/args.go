@@ -88,3 +88,23 @@ type CreateConfigmapArgs struct {
 	Project     string `json:"project"`
 	Application string `json:"application"`
 }
+
+type AddConfigToConfigmapArgs struct {
+	Project     string `json:"project"`
+	Application string `json:"application"`
+	ConfigName  string `json:"config_name"`
+	Data        []byte `json:"data"`
+}
+
+type DeleteSpecifiedConfigArgs struct {
+	Project     string `json:"project"`
+	Application string `json:"application"`
+	ConfigName  string `json:"config_name"`
+}
+
+type UpdateSpecifiedConfigArgs struct {
+	Project     string `json:"project"`
+	Application string `json:"application"`
+	ConfigName  string `json:"config_name"`
+	NewVal      []byte `json:"new_val"`
+}

@@ -175,6 +175,12 @@ func (ctrl *ProjectController) DestroyApplication(c *gin.Context) {
 		return
 	}
 
+	if err := ctrl.ExecService.DeleteConfigmap(c, args.Project, args.Application); err != nil {
+		util.Logger.Errorf("controller.DestroyApplication DeleteDeployment err: %s", err)
+		ctrl.Jsonify(c, 400, struct{}{}, err.Error())
+		return
+	}
+
 	ctrl.Jsonify(c, 200, struct{}{}, "success")
 }
 
@@ -370,14 +376,96 @@ func (ctrl *ProjectController) GetApplicationEnvs(c *gin.Context) {
 func (ctrl *ProjectController) CreateApplicationConfigmap(c *gin.Context) {
 	var args common.CreateConfigmapArgs
 	if err := c.BindJSON(&args); err != nil {
-		util.Logger.Errorf("controller.CreateApplicationConfigmapWithFile err: %s", err)
+		util.Logger.Errorf("controller.CreateApplicationConfigmap err: %s", err)
 		ctrl.Jsonify(c, 400, struct{}{}, err.Error())
 		return
 	}
 
 	err := ctrl.ExecService.CreateApplicationConfigmap(c, args.Project, args.Application)
 	if err != nil {
-		util.Logger.Errorf("controller.CreateApplicationConfigmapWithFile err: %s", err)
+		util.Logger.Errorf("controller.CreateApplicationConfigmap err: %s", err)
+		ctrl.Jsonify(c, 400, struct{}{}, err.Error())
+		return
+	}
+
+	ctrl.Jsonify(c, 200, struct{}{}, "success")
+}
+
+func (ctrl *ProjectController) AddConfigToConfigmap(c *gin.Context) {
+	var args common.AddConfigToConfigmapArgs
+	if err := c.BindJSON(&args); err != nil {
+		util.Logger.Errorf("controller.AddConfigToConfigmap err: %s", err)
+		ctrl.Jsonify(c, 400, struct{}{}, err.Error())
+		return
+	}
+
+	err := ctrl.ExecService.AddConfigToConfigmap(c, args.Project, args.Application, args.ConfigName, args.Data)
+	if err != nil {
+		util.Logger.Errorf("controller.AddConfigToConfigmap err: %s", err)
+		ctrl.Jsonify(c, 400, struct{}{}, err.Error())
+		return
+	}
+
+	ctrl.Jsonify(c, 200, struct{}{}, "success")
+}
+
+func (ctrl *ProjectController) DeleteSpecifiedConfig(c *gin.Context) {
+	var args common.DeleteSpecifiedConfigArgs
+	if err := c.BindJSON(&args); err != nil {
+		util.Logger.Errorf("controller.DeleteSpecifiedConfig err: %s", err)
+		ctrl.Jsonify(c, 400, struct{}{}, err.Error())
+		return
+	}
+
+	err := ctrl.ExecService.DeleteSpecifiedConfig(c, args.Project, args.Application, args.ConfigName)
+	if err != nil {
+		util.Logger.Errorf("controller.DeleteSpecifiedConfig err: %s", err)
+		ctrl.Jsonify(c, 400, struct{}{}, err.Error())
+		return
+	}
+
+	ctrl.Jsonify(c, 200, struct{}{}, "success")
+}
+
+func (ctrl *ProjectController) GetApplicationConfigList(c *gin.Context) {
+	project := c.Param("project")
+	application := c.Param("application")
+
+	ret, err := ctrl.WatchService.GetApplicationConfigList(c, project, application)
+	if err != nil {
+		util.Logger.Errorf("controller.GetApplicationConfigList err: %s", err)
+		ctrl.Jsonify(c, 400, struct{}{}, err.Error())
+		return
+	}
+
+	ctrl.Jsonify(c, 200, ret, "success")
+}
+
+func (ctrl *ProjectController) GetApplicationConfigDetail(c *gin.Context) {
+	project := c.Param("project")
+	application := c.Param("application")
+
+	ret, err := ctrl.WatchService.GetApplicationConfigDetail(c, project, application)
+	if err != nil {
+		util.Logger.Errorf("controller.GetApplicationConfigDetail err: %s", err)
+		ctrl.Jsonify(c, 400, struct{}{}, err.Error())
+		return
+	}
+
+	ctrl.Jsonify(c, 200, ret, "success")
+}
+
+func (ctrl *ProjectController) UpdateSpecifiedConfig(c *gin.Context) {
+	var args common.UpdateSpecifiedConfigArgs
+	if err := c.BindJSON(&args); err != nil {
+		util.Logger.Errorf("controller.UpdateSpecifiedConfig err: %s", err)
+		ctrl.Jsonify(c, 400, struct{}{}, err.Error())
+		return
+	}
+
+	err := ctrl.ExecService.UpdateSpecifiedConfig(c, args.Project, args.Application, args.ConfigName, args.NewVal)
+	if err != nil {
+		util.Logger.Errorf("controller.UpdateSpecifiedConfig err: %s", err)
 		ctrl.Jsonify(c, 400, struct{}{}, err.Error())
 		return
 	}
