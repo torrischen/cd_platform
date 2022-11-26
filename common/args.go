@@ -83,3 +83,8 @@ type SetEnvArgs struct {
 	Application string          `json:"application"`
 	Envs        []corev1.EnvVar `json:"envs"`
 }
+
+type CreateConfigmapArgs struct {
+	Project     string `json:"project"`
+	Application string `json:"application"`
+}

@@ -25,6 +25,7 @@ type Client struct {
 	ServiceLister     listercorev1.ServiceLister
 	IngressLister     listernetworkv1.IngressLister
 	NSLister          listercorev1.NamespaceLister
+	CMLister          listercorev1.ConfigMapLister
 }
 
 func Init(conf conf.Config) *Client {
@@ -108,12 +109,22 @@ func Init(conf conf.Config) *Client {
 		},
 	})
 
+	sharedIM.Core().V1().ConfigMaps().Informer().AddEventHandler(cache.ResourceEventHandlerFuncs{
+		AddFunc: func(obj interface{}) {
+			util.Logger.Infof("New configmap added: %s", obj.(metav1.Object).GetName())
+		},
+		DeleteFunc: func(obj interface{}) {
+			util.Logger.Infof("configmap deleted: %s", obj.(metav1.Object).GetName())
+		},
+	})
+
 	nsLister := sharedIM.Core().V1().Namespaces().Lister()
 	depLister := sharedIM.Apps().V1().Deployments().Lister()
 	stsLister := sharedIM.Apps().V1().StatefulSets().Lister()
 	podLister := sharedIM.Core().V1().Pods().Lister()
 	serviceLister := sharedIM.Core().V1().Services().Lister()
 	ingressLister := sharedIM.Networking().V1().Ingresses().Lister()
+	cmLister := sharedIM.Core().V1().ConfigMaps().Lister()
 
 	go sharedIM.Start(make(chan struct{}))
 
@@ -125,6 +136,7 @@ func Init(conf conf.Config) *Client {
 	c.PodLister = podLister
 	c.ServiceLister = serviceLister
 	c.IngressLister = ingressLister
+	c.CMLister = cmLister
 
 	return c
 }

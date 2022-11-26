@@ -95,9 +95,10 @@ func (s *Service) DeleteIngressRule(ctx context.Context, project string, applica
 	}
 
 	newIngRule := ing.Spec.Rules[0].HTTP.Paths
-	for i := 0; i < len(ing.Spec.Rules[0].HTTP.Paths); i++ {
-		if strings.Contains(ing.Spec.Rules[0].HTTP.Paths[i].Path, "/api/"+project+"/"+application) {
+	for i := 0; i < len(newIngRule); i++ {
+		if strings.Contains(newIngRule[i].Path, "/api/"+project+"/"+application) {
 			newIngRule = append(newIngRule[:i], newIngRule[i+1:]...)
+			i--
 		}
 	}
 	ing.Spec.Rules[0].HTTP.Paths = newIngRule
@@ -119,10 +120,10 @@ func (s *Service) DeleteSpecifiedIngressRule(ctx context.Context, project string
 	}
 
 	newIngRule := ing.Spec.Rules[0].HTTP.Paths
-	for i := 0; i < len(ing.Spec.Rules[0].HTTP.Paths); i++ {
-		if ing.Spec.Rules[0].HTTP.Paths[i].Path == path {
+	for i := 0; i < len(newIngRule); i++ {
+		if newIngRule[i].Path == path {
 			newIngRule = append(newIngRule[:i], newIngRule[i+1:]...)
-			break
+			i--
 		}
 	}
 	ing.Spec.Rules[0].HTTP.Paths = newIngRule

@@ -366,3 +366,21 @@ func (ctrl *ProjectController) GetApplicationEnvs(c *gin.Context) {
 
 	ctrl.Jsonify(c, 200, ret, "success")
 }
+
+func (ctrl *ProjectController) CreateApplicationConfigmap(c *gin.Context) {
+	var args common.CreateConfigmapArgs
+	if err := c.BindJSON(&args); err != nil {
+		util.Logger.Errorf("controller.CreateApplicationConfigmapWithFile err: %s", err)
+		ctrl.Jsonify(c, 400, struct{}{}, err.Error())
+		return
+	}
+
+	err := ctrl.ExecService.CreateApplicationConfigmap(c, args.Project, args.Application)
+	if err != nil {
+		util.Logger.Errorf("controller.CreateApplicationConfigmapWithFile err: %s", err)
+		ctrl.Jsonify(c, 400, struct{}{}, err.Error())
+		return
+	}
+
+	ctrl.Jsonify(c, 200, struct{}{}, "success")
+}

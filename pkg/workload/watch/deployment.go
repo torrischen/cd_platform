@@ -76,7 +76,7 @@ func (s *Service) GetDeploymentYaml(ctx context.Context, project string, applica
 }
 
 func (s *Service) GetDeploymentEnvs(ctx context.Context, project string, application string) ([]corev1.EnvVar, error) {
-	dep, err := s.Mid.K8sclient.DeploymentLister.Deployments(util.ProjectToNS(project)).Get(application);
+	dep, err := s.Mid.K8sclient.DeploymentLister.Deployments(util.ProjectToNS(project)).Get(application)
 	if err != nil {
 		util.Logger.Errorf("watch.GetDeploymentEnvs err: %s", err)
 		return nil, err

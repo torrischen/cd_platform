@@ -29,6 +29,7 @@ func InitController() *gin.Engine {
 	pc.GET("/:project/application/:application/yaml", projectController.GetApplicationYaml)
 	pc.GET("/:project/application/:application/envs", projectController.GetApplicationEnvs)
 	pc.POST("/application/env/set", projectController.SetApplicationEnvs)
+	pc.POST("/application/configmap/create", projectController.CreateApplicationConfigmap)
 
 	return engine
 }

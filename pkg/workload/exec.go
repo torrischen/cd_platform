@@ -27,6 +27,7 @@ type ExecService interface {
 	CreateProjectIngress(ctx context.Context, project string) error
 	RestartDeployment(ctx context.Context, project string, application string) error
 	SetDeploymentEnv(ctx context.Context, project string, application string, envs []corev1.EnvVar) error
+	CreateApplicationConfigmap(ctx context.Context, project string, application string) error
 }
 
 type Service struct {
