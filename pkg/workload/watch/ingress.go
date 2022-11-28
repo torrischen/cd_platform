@@ -46,7 +46,7 @@ func (s *Service) GetIngressByApplication(ctx context.Context, project string, a
 	ret := make([]*common.IngressRule, 0)
 	rules := ing.Spec.Rules[0].HTTP.Paths
 	for i := 0; i < len(rules); i++ {
-		if strings.Contains(rules[i].Path, "/api/"+project+"/"+application) {
+		if strings.Contains(rules[i].Path, "/"+project+"/"+application) {
 			tmp := &common.IngressRule{}
 			tmp.Project = project
 			tmp.Application = application

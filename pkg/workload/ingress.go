@@ -65,7 +65,7 @@ func (s *Service) InsertIngressRule(ctx context.Context, rule *common.IngressRul
 
 	pathType := networkv1.PathType("Prefix")
 	newIngRule := networkv1.HTTPIngressPath{
-		Path:     "/api/" + rule.Project + "/" + rule.Application + rule.Path,
+		Path:     rule.Path,
 		PathType: &pathType,
 		Backend: networkv1.IngressBackend{
 			Service: &networkv1.IngressServiceBackend{
@@ -96,7 +96,7 @@ func (s *Service) DeleteIngressRule(ctx context.Context, project string, applica
 
 	newIngRule := ing.Spec.Rules[0].HTTP.Paths
 	for i := 0; i < len(newIngRule); i++ {
-		if strings.Contains(newIngRule[i].Path, "/api/"+project+"/"+application) {
+		if strings.Contains(newIngRule[i].Path, "/"+project+"/"+application) {
 			newIngRule = append(newIngRule[:i], newIngRule[i+1:]...)
 			i--
 		}
