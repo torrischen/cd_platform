@@ -177,8 +177,6 @@ func (ctrl *ProjectController) DestroyApplication(c *gin.Context) {
 
 	if err := ctrl.ExecService.DeleteConfigmap(c, args.Project, args.Application); err != nil {
 		util.Logger.Errorf("controller.DestroyApplication DeleteDeployment err: %s", err)
-		ctrl.Jsonify(c, 400, struct{}{}, err.Error())
-		return
 	}
 
 	ctrl.Jsonify(c, 200, struct{}{}, "success")
