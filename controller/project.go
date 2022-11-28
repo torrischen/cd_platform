@@ -212,6 +212,9 @@ func (ctrl *ProjectController) GetApplicationList(c *gin.Context) {
 		return
 	}
 
+	sort.Slice(ret, func(i, j int) bool {
+		return ret[i] < ret[j]
+	})
 	ctrl.Jsonify(c, 200, ret, "success")
 }
 
