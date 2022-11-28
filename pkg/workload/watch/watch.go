@@ -4,6 +4,7 @@ import (
 	"cd_platform/common"
 	"cd_platform/mid"
 	"context"
+	"io"
 
 	appsv1 "k8s.io/api/apps/v1"
 	corev1 "k8s.io/api/core/v1"
@@ -27,7 +28,7 @@ type WatchService interface {
 	GetPodByApplication(ctx context.Context, project string, application string) ([]*common.PodDetail, error)
 	GetPodByProject(ctx context.Context, project string) ([]*common.PodByApplication, error)
 	GetIngressByApplication(ctx context.Context, project string, application string) ([]*common.IngressRule, error)
-	GetPodLog(ctx context.Context, project string, podname string) ([]byte, error)
+	GetPodLog(ctx context.Context, project string, podname string) (io.ReadCloser, error)
 	GetDeploymentListByProject(ctx context.Context, project string) ([]string, error)
 	GetDeploymentEnvs(ctx context.Context, project string, application string) ([]corev1.EnvVar, error)
 	GetDeploymentYaml(ctx context.Context, project string, application string) (string, error)

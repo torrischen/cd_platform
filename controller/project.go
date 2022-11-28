@@ -1,13 +1,16 @@
 package controller
 
 import (
+	"bufio"
 	"cd_platform/common"
 	"cd_platform/ext"
 	"cd_platform/pkg/workload"
 	"cd_platform/pkg/workload/watch"
 	"cd_platform/util"
 	"github.com/gin-gonic/gin"
+	"github.com/gorilla/websocket"
 	"sort"
+	"time"
 )
 
 type ProjectController struct {
@@ -261,14 +264,34 @@ func (ctrl *ProjectController) GetPodLog(c *gin.Context) {
 	project := c.Param("project")
 	podname := c.Param("podname")
 
-	ret, err := ctrl.WatchService.GetPodLog(c, project, podname)
+	stream, err := ctrl.WatchService.GetPodLog(c, project, podname)
 	if err != nil {
 		util.Logger.Errorf("controller.GetPodLog err: %s", err)
 		ctrl.Jsonify(c, 400, struct{}{}, err.Error())
 		return
 	}
+	defer stream.Close()
 
-	ctrl.Jsonify(c, 200, util.ByteToString(ret), "success")
+	reader := bufio.NewReader(stream)
+	upgrader := &websocket.Upgrader{}
+	conn, err := upgrader.Upgrade(c.Writer, c.Request, nil)
+	if err != nil {
+		util.Logger.Errorf("controller.GetPodLog newconn err: %s", err)
+		ctrl.Jsonify(c, 400, struct{}{}, err.Error())
+		return
+	}
+	defer conn.Close()
+
+	for {
+		data, _, _ := reader.ReadLine()
+		err := conn.WriteMessage(1, data)
+		if err != nil {
+			util.Logger.Errorf("controller.GetPodLog getlog err: %s", err)
+			ctrl.Jsonify(c, 400, struct{}{}, err.Error())
+			return
+		}
+		time.Sleep(time.Millisecond)
+	}
 }
 
 func (ctrl *ProjectController) DeleteSpecifiedIngressRule(c *gin.Context) {
