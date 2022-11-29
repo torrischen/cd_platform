@@ -5,6 +5,7 @@ import (
 	"cd_platform/util"
 	"io"
 	"sync"
+	"time"
 
 	"context"
 
@@ -53,7 +54,7 @@ func (s *Service) GetPodByApplication(ctx context.Context, project string, appli
 			Name:       podlist[i].Name,
 			Namespace:  podlist[i].Namespace,
 			Image:      podlist[i].Spec.Containers[0].Image,
-			CreateTime: podlist[i].CreationTimestamp.Format("2006-01-02 15:04:05"),
+			CreateTime: podlist[i].CreationTimestamp.Add(8 * time.Hour).Format("2006-01-02 15:04:05"),
 			HostIp:     podlist[i].Status.HostIP,
 			PodIp:      podlist[i].Status.PodIP,
 			Status:     &podlist[i].Status.ContainerStatuses[0].State,
@@ -95,7 +96,7 @@ func (s *Service) GetPodByProject(ctx context.Context, project string) ([]*commo
 					Name:       podlist[i].Name,
 					Namespace:  podlist[i].Namespace,
 					Image:      podlist[i].Spec.Containers[0].Image,
-					CreateTime: podlist[i].CreationTimestamp.Format("2006-01-02 15:04:05"),
+					CreateTime: podlist[i].CreationTimestamp.Add(8 * time.Hour).Format("2006-01-02 15:04:05"),
 					HostIp:     podlist[i].Status.HostIP,
 					PodIp:      podlist[i].Status.PodIP,
 					Status:     &podlist[i].Status.ContainerStatuses[0].State,
