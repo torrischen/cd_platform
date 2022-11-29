@@ -9,6 +9,7 @@ import (
 	"cd_platform/util"
 	"github.com/gin-gonic/gin"
 	"github.com/gorilla/websocket"
+	"net/http"
 	"sort"
 )
 
@@ -272,24 +273,43 @@ func (ctrl *ProjectController) GetPodLog(c *gin.Context) {
 		ctrl.Jsonify(c, 400, struct{}{}, err.Error())
 		return
 	}
-	defer stream.Close()
 
 	reader := bufio.NewReader(stream)
-	upgrader := &websocket.Upgrader{}
+	upgrader := &websocket.Upgrader{
+		CheckOrigin: func(r *http.Request) bool {
+			return true
+		},
+	}
 	conn, err := upgrader.Upgrade(c.Writer, c.Request, nil)
 	if err != nil {
 		util.Logger.Errorf("controller.GetPodLog newconn err: %s", err)
 		ctrl.Jsonify(c, 400, struct{}{}, err.Error())
 		return
 	}
-	defer conn.Close()
+
+	go func() {
+		for {
+			msgType, _, err := conn.ReadMessage()
+			if err != nil || msgType == -1 {
+				stream.Close()
+				conn.Close()
+				return
+			}
+		}
+	}()
 
 	for {
-		data, _, _ := reader.ReadLine()
-		err := conn.WriteMessage(1, data)
+		data, _, err := reader.ReadLine()
+		if err != nil {
+			if err.Error() != "http2: response body closed" {
+				util.Logger.Errorf("controller.GetPodLog readline err: %s", err)
+			}
+			return
+		}
+
+		err = conn.WriteMessage(1, data)
 		if err != nil {
 			util.Logger.Errorf("controller.GetPodLog getlog err: %s", err)
-			ctrl.Jsonify(c, 400, struct{}{}, err.Error())
 			return
 		}
 	}
