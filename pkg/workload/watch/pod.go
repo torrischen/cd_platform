@@ -120,8 +120,8 @@ func (s *Service) GetPodByProject(ctx context.Context, project string) ([]*commo
 }
 
 func (s *Service) GetPodLog(ctx context.Context, project string, podname string) (io.ReadCloser, error) {
-	log := s.Mid.K8sclient.ClientSet.CoreV1().Pods(util.ProjectToNS(project)).GetLogs(podname, &corev1.PodLogOptions{Follow: true})
-
+	line := int64(3000)
+	log := s.Mid.K8sclient.ClientSet.CoreV1().Pods(util.ProjectToNS(project)).GetLogs(podname, &corev1.PodLogOptions{Follow: true, TailLines: &line})
 	podlog, err := log.Stream(ctx)
 
 	if err != nil {
