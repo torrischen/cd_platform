@@ -10,7 +10,6 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/gorilla/websocket"
 	"sort"
-	"time"
 )
 
 type ProjectController struct {
@@ -293,7 +292,6 @@ func (ctrl *ProjectController) GetPodLog(c *gin.Context) {
 			ctrl.Jsonify(c, 400, struct{}{}, err.Error())
 			return
 		}
-		time.Sleep(time.Millisecond)
 	}
 }
 

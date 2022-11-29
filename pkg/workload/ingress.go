@@ -42,6 +42,9 @@ func (s *Service) CreateProjectIngress(ctx context.Context, project string) erro
 		},
 	}
 	ing.Name = util.ProjectToNS(project)
+	ing.Annotations = make(map[string]string)
+	ing.Annotations["nginx.ingress.kubernetes.io/proxy-read-timeout"] = "3600"
+	ing.Annotations["nginx.ingress.kubernetes.io/proxy-send-timeout"] = "3600"
 
 	_, err := s.Mid.K8sclient.ClientSet.NetworkingV1().Ingresses(util.ProjectToNS(project)).Create(ctx, ing, metav1.CreateOptions{})
 	if err != nil {
