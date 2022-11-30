@@ -1,6 +1,7 @@
 package workload
 
 import (
+	"cd_platform/common"
 	"cd_platform/util"
 	"context"
 	"errors"
@@ -88,7 +89,7 @@ func (s *Service) RestartDeployment(ctx context.Context, project string, applica
 			"template": map[string]interface{}{
 				"metadata": map[string]interface{}{
 					"annotations": map[string]interface{}{
-						"restarted_at": time.Now().Format("2006-01-02 15:04:05"),
+						"restarted_at": time.Now().In(common.TimeZone).Format("2006-01-02 15:04:05"),
 					},
 				},
 			},
