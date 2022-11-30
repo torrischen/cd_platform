@@ -10,6 +10,8 @@ import (
 const DateLayout = "2006-01-02"
 const DateTimeLayout = "2006-01-02 15:04:05"
 
+var TimeZone, _ = time.LoadLocation("Asia/Shanghai")
+
 type Date time.Time
 
 func (d *Date) MarshalJSON() ([]byte, error) {

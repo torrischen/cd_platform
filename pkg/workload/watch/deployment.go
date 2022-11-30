@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 	corev1 "k8s.io/api/core/v1"
 	"sigs.k8s.io/yaml"
+	"sort"
 
 	"context"
 
@@ -49,6 +50,10 @@ func (s *Service) GetDeploymentListByProject(ctx context.Context, project string
 	for i := 0; i < len(deplist); i++ {
 		ret = append(ret, deplist[i].Name)
 	}
+
+	sort.Slice(ret, func(i, j int) bool {
+		return ret[i] < ret[j]
+	})
 
 	return ret, nil
 }

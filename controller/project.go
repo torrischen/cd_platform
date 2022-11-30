@@ -10,7 +10,6 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/gorilla/websocket"
 	"net/http"
-	"sort"
 )
 
 type ProjectController struct {
@@ -212,9 +211,6 @@ func (ctrl *ProjectController) GetApplicationList(c *gin.Context) {
 		return
 	}
 
-	sort.Slice(ret, func(i, j int) bool {
-		return ret[i] < ret[j]
-	})
 	ctrl.Jsonify(c, 200, ret, "success")
 }
 
@@ -228,10 +224,6 @@ func (ctrl *ProjectController) GetApplicationDetailsByApplication(c *gin.Context
 		ctrl.Jsonify(c, 400, struct{}{}, err.Error())
 		return
 	}
-
-	sort.Slice(ret, func(i, j int) bool {
-		return ret[i].Name < ret[j].Name
-	})
 
 	ctrl.Jsonify(c, 200, ret, "success")
 }
