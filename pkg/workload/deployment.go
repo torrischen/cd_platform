@@ -3,6 +3,7 @@ package workload
 import (
 	"cd_platform/util"
 	"context"
+	"errors"
 	appsv1 "k8s.io/api/apps/v1"
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/types"
@@ -48,6 +49,19 @@ func (s *Service) UpdateDeploymentImage(ctx context.Context, project string, app
 }
 
 func (s *Service) PatchDeploymentReplica(ctx context.Context, project string, application string, replica int32) error {
+	dep, err := s.Mid.K8sclient.DeploymentLister.Deployments(util.ProjectToNS(project)).Get(application)
+	if err != nil {
+		util.Logger.Errorf("exec.PatchDeploymentReplica err: %s", err)
+		return err
+	}
+	oldreplica := *dep.Spec.Replicas
+	if replica > 10 {
+		return errors.New("replica should be less than 10")
+	}
+	if replica < (oldreplica/5)*2 {
+		return errors.New("the percentage of reduced capacity must not be less than 60%")
+	}
+
 	newpatchmap := map[string]interface{}{
 		"spec": map[string]interface{}{
 			"replicas": replica,
