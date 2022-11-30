@@ -1,6 +1,8 @@
 package common
 
-import corev1 "k8s.io/api/core/v1"
+import (
+	corev1 "k8s.io/api/core/v1"
+)
 
 type ResponseBody struct {
 	Code    int         `json:"code"`
@@ -39,4 +41,11 @@ type ConfigList struct {
 type ConfigDetail struct {
 	ConfigName  string `json:"config_name"`
 	ConfigValue string `json:"config_value"`
+}
+
+type DeploymentItem struct {
+	Name         string `json:"name"`
+	Replica      int32  `json:"replica"`
+	CreationTime string `json:"creation_time"`
+	Generation   int64  `json:"generation"`
 }

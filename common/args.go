@@ -90,10 +90,14 @@ type CreateConfigmapArgs struct {
 }
 
 type AddConfigToConfigmapArgs struct {
-	Project     string `json:"project"`
-	Application string `json:"application"`
-	ConfigName  string `json:"config_name"`
-	Data        string `json:"data"`
+	Project     string   `json:"project"`
+	Application string   `json:"application"`
+	Configs     []Config `json:"configs"`
+}
+
+type Config struct {
+	ConfigName string `json:"config_name"`
+	Data       string `json:"data"`
 }
 
 type DeleteSpecifiedConfigArgs struct {

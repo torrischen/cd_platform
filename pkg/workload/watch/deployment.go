@@ -39,20 +39,26 @@ func (s *Service) GetDeploymentByLabel(ctx context.Context, cond *common.Selecto
 	return ret, nil
 }
 
-func (s *Service) GetDeploymentListByProject(ctx context.Context, project string) ([]string, error) {
+func (s *Service) GetDeploymentListByProject(ctx context.Context, project string) ([]common.DeploymentItem, error) {
 	deplist, err := s.Mid.K8sclient.DeploymentLister.Deployments(util.ProjectToNS(project)).List(labels.NewSelector())
 	if err != nil {
 		util.Logger.Errorf("watch.GetDeploymentListByProject err: %s", err)
 		return nil, err
 	}
 
-	ret := make([]string, 0)
+	ret := make([]common.DeploymentItem, 0)
 	for i := 0; i < len(deplist); i++ {
-		ret = append(ret, deplist[i].Name)
+		tmp := common.DeploymentItem{
+			Name:         deplist[i].Name,
+			Replica:      *deplist[i].Spec.Replicas,
+			CreationTime: deplist[i].CreationTimestamp.In(common.TimeZone).Format(common.DateTimeLayout),
+			Generation:   deplist[i].Generation,
+		}
+		ret = append(ret, tmp)
 	}
 
 	sort.Slice(ret, func(i, j int) bool {
-		return ret[i] < ret[j]
+		return ret[i].Name < ret[j].Name
 	})
 
 	return ret, nil

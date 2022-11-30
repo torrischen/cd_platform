@@ -113,6 +113,12 @@ func (ctrl *ProjectController) CreateApplication(c *gin.Context) {
 		return
 	}
 
+	if err := ctrl.ExecService.CreateApplicationConfigmap(c, args.Project, args.DeploymentRaw.Name); err != nil {
+		util.Logger.Errorf("controller.CreateApplication createConfigmap err: %s", err)
+		ctrl.Jsonify(c, 400, struct{}{}, err.Error())
+		return
+	}
+
 	if err := ctrl.ExecService.CreateDeployment(c, args.Project, args.DeploymentRaw); err != nil {
 		util.Logger.Errorf("controller.CreateApplication createDeployment err: %s", err)
 		ctrl.Jsonify(c, 400, struct{}{}, err.Error())
@@ -433,7 +439,7 @@ func (ctrl *ProjectController) AddConfigToConfigmap(c *gin.Context) {
 		return
 	}
 
-	err := ctrl.ExecService.AddConfigToConfigmap(c, args.Project, args.Application, args.ConfigName, args.Data)
+	err := ctrl.ExecService.AddConfigToConfigmap(c, args.Project, args.Application, args.Configs)
 	if err != nil {
 		util.Logger.Errorf("controller.AddConfigToConfigmap err: %s", err)
 		ctrl.Jsonify(c, 400, struct{}{}, err.Error())

@@ -1,6 +1,7 @@
 package workload
 
 import (
+	"cd_platform/common"
 	"cd_platform/util"
 	"context"
 	corev1 "k8s.io/api/core/v1"
@@ -54,7 +55,7 @@ func (s *Service) DeleteConfigmap(ctx context.Context, project string, applicati
 	return s.Mid.K8sclient.ClientSet.CoreV1().ConfigMaps(util.ProjectToNS(project)).Delete(ctx, application, metav1.DeleteOptions{})
 }
 
-func (s *Service) AddConfigToConfigmap(ctx context.Context, project string, application string, configName string, data string) error {
+func (s *Service) AddConfigToConfigmap(ctx context.Context, project string, application string, configs []common.Config) error {
 	cfm, err := s.Mid.K8sclient.CMLister.ConfigMaps(util.ProjectToNS(project)).Get(application)
 	if err != nil {
 		util.Logger.Errorf("workload.AddConfigToConfigmap err: %s", err)
@@ -64,7 +65,10 @@ func (s *Service) AddConfigToConfigmap(ctx context.Context, project string, appl
 	if cfm.Data == nil {
 		cfm.Data = make(map[string]string)
 	}
-	cfm.Data[configName] = data
+
+	for i := 0; i < len(configs); i++ {
+		cfm.Data[configs[i].ConfigName] = configs[i].Data
+	}
 
 	_, err = s.Mid.K8sclient.ClientSet.CoreV1().ConfigMaps(util.ProjectToNS(project)).Update(ctx, cfm, metav1.UpdateOptions{})
 	if err != nil {

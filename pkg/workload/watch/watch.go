@@ -29,7 +29,7 @@ type WatchService interface {
 	GetPodByProject(ctx context.Context, project string) ([]*common.PodByApplication, error)
 	GetIngressByApplication(ctx context.Context, project string, application string) ([]*common.IngressRule, error)
 	GetPodLog(ctx context.Context, project string, podname string) (io.ReadCloser, error)
-	GetDeploymentListByProject(ctx context.Context, project string) ([]string, error)
+	GetDeploymentListByProject(ctx context.Context, project string) ([]common.DeploymentItem, error)
 	GetDeploymentEnvs(ctx context.Context, project string, application string) ([]corev1.EnvVar, error)
 	GetDeploymentYaml(ctx context.Context, project string, application string) (string, error)
 	GetApplicationConfigList(ctx context.Context, project string, application string) (*common.ConfigList, error)
