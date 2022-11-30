@@ -53,7 +53,7 @@ func (s *Service) GetPodByApplication(ctx context.Context, project string, appli
 			Name:       podlist[i].Name,
 			Namespace:  podlist[i].Namespace,
 			Image:      podlist[i].Spec.Containers[0].Image,
-			CreateTime: podlist[i].CreationTimestamp.In(common.TimeZone).Format("2006-01-02 15:04:05"),
+			CreateTime: podlist[i].CreationTimestamp.In(common.TimeZone).Format(common.DateTimeLayout),
 			HostIp:     podlist[i].Status.HostIP,
 			PodIp:      podlist[i].Status.PodIP,
 			Status:     &podlist[i].Status.ContainerStatuses[0].State,
@@ -99,7 +99,7 @@ func (s *Service) GetPodByProject(ctx context.Context, project string) ([]*commo
 					Name:       podlist[i].Name,
 					Namespace:  podlist[i].Namespace,
 					Image:      podlist[i].Spec.Containers[0].Image,
-					CreateTime: podlist[i].CreationTimestamp.In(common.TimeZone).Format("2006-01-02 15:04:05"),
+					CreateTime: podlist[i].CreationTimestamp.In(common.TimeZone).Format(common.DateTimeLayout),
 					HostIp:     podlist[i].Status.HostIP,
 					PodIp:      podlist[i].Status.PodIP,
 					Status:     &podlist[i].Status.ContainerStatuses[0].State,
@@ -124,7 +124,12 @@ func (s *Service) GetPodByProject(ctx context.Context, project string) ([]*commo
 
 func (s *Service) GetPodLog(ctx context.Context, project string, podname string) (io.ReadCloser, error) {
 	line := int64(3000)
-	log := s.Mid.K8sclient.ClientSet.CoreV1().Pods(util.ProjectToNS(project)).GetLogs(podname, &corev1.PodLogOptions{Follow: true, TailLines: &line})
+	log := s.Mid.K8sclient.ClientSet.CoreV1().Pods(util.ProjectToNS(project)).GetLogs(
+		podname,
+		&corev1.PodLogOptions{
+			Follow:    true,
+			TailLines: &line,
+		})
 	podlog, err := log.Stream(ctx)
 
 	if err != nil {
