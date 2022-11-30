@@ -10,6 +10,7 @@ COPY . .
 RUN go build -o ./server ./cmd/server.go
 
 FROM alpine
+RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.ustc.edu.cn/g' /etc/apk/repositories && apk add --no-cache tzdata
 COPY --from=builder /cd/server .
 COPY --from=builder /cd/conf/kubecfg.yaml /conf/kubecfg.yaml
 EXPOSE 8080
