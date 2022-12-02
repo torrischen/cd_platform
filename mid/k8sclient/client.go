@@ -4,7 +4,9 @@ import (
 	"cd_platform/conf"
 	"cd_platform/util"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/apimachinery/pkg/runtime/schema"
 	"k8s.io/client-go/dynamic"
+	"k8s.io/client-go/dynamic/dynamicinformer"
 	"k8s.io/client-go/informers"
 	"k8s.io/client-go/kubernetes"
 	listerappsv1 "k8s.io/client-go/listers/apps/v1"
@@ -26,6 +28,7 @@ type Client struct {
 	IngressLister     listernetworkv1.IngressLister
 	NSLister          listercorev1.NamespaceLister
 	CMLister          listercorev1.ConfigMapLister
+	ProjectLister     cache.GenericLister
 }
 
 func Init(conf conf.Config) *Client {
@@ -49,6 +52,7 @@ func Init(conf conf.Config) *Client {
 	}
 
 	sharedIM := informers.NewSharedInformerFactory(clientset, 4*time.Hour)
+	dynamicIM := dynamicinformer.NewDynamicSharedInformerFactory(dynamicClient, 4*time.Hour)
 
 	sharedIM.Core().V1().Namespaces().Informer().AddEventHandler(cache.ResourceEventHandlerFuncs{
 		AddFunc: func(obj interface{}) {
@@ -118,6 +122,19 @@ func Init(conf conf.Config) *Client {
 		},
 	})
 
+	dynamicIM.ForResource(schema.GroupVersionResource{
+		Group:    "cytcrd.nainaiguan.com",
+		Version:  "v1",
+		Resource: "projects",
+	}).Informer().AddEventHandler(cache.ResourceEventHandlerFuncs{
+		AddFunc: func(obj interface{}) {
+			util.Logger.Infof("New Project added: %s", obj.(metav1.Object).GetName())
+		},
+		DeleteFunc: func(obj interface{}) {
+			util.Logger.Infof("Project deleted: %s", obj.(metav1.Object).GetName())
+		},
+	})
+
 	nsLister := sharedIM.Core().V1().Namespaces().Lister()
 	depLister := sharedIM.Apps().V1().Deployments().Lister()
 	stsLister := sharedIM.Apps().V1().StatefulSets().Lister()
@@ -125,8 +142,14 @@ func Init(conf conf.Config) *Client {
 	serviceLister := sharedIM.Core().V1().Services().Lister()
 	ingressLister := sharedIM.Networking().V1().Ingresses().Lister()
 	cmLister := sharedIM.Core().V1().ConfigMaps().Lister()
+	projectLister := dynamicIM.ForResource(schema.GroupVersionResource{
+		Group:    "cytcrd.nainaiguan.com",
+		Version:  "v1",
+		Resource: "projects",
+	}).Lister()
 
 	go sharedIM.Start(make(chan struct{}))
+	go dynamicIM.Start(make(chan struct{}))
 
 	c.ClientSet = clientset
 	c.NSLister = nsLister
@@ -137,6 +160,7 @@ func Init(conf conf.Config) *Client {
 	c.ServiceLister = serviceLister
 	c.IngressLister = ingressLister
 	c.CMLister = cmLister
+	c.ProjectLister = projectLister
 
 	return c
 }

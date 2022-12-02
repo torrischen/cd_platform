@@ -32,6 +32,8 @@ type ExecService interface {
 	DeleteConfigmap(ctx context.Context, project string, application string) error
 	DeleteSpecifiedConfig(ctx context.Context, project string, application string, configName string) error
 	UpdateSpecifiedConfig(ctx context.Context, project string, application string, configName string, newVal string) error
+	CrdCreateProject(ctx context.Context, project string) error
+	CrdAddApplicationToProject(ctx context.Context, project string, application string) error
 }
 
 type Service struct {
