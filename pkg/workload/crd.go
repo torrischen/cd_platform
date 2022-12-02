@@ -59,7 +59,7 @@ func (s *Service) CrdAddApplicationToProject(ctx context.Context, project string
 	proj.Spec.Application = append(proj.Spec.Application, application)
 
 	newun, err := runtime.DefaultUnstructuredConverter.ToUnstructured(proj)
-	s.Mid.K8sclient.DynamicClient.Resource(schema.GroupVersionResource{
+	_, err = s.Mid.K8sclient.DynamicClient.Resource(schema.GroupVersionResource{
 		Group:    "cytcrd.nainaiguan.com",
 		Version:  "v1",
 		Resource: "projects",
