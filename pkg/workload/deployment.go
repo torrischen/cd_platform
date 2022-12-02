@@ -15,6 +15,24 @@ import (
 )
 
 func (s *Service) CreateDeployment(ctx context.Context, project string, deployment *appsv1.Deployment) error {
+	newvlm := corev1.VolumeMount{
+		Name:      deployment.Name,
+		MountPath: "./config",
+	}
+	newvl := corev1.Volume{
+		Name: deployment.Name,
+		VolumeSource: corev1.VolumeSource{
+			ConfigMap: &corev1.ConfigMapVolumeSource{
+				LocalObjectReference: corev1.LocalObjectReference{
+					Name: deployment.Name,
+				},
+			},
+		},
+	}
+
+	deployment.Spec.Template.Spec.Containers[0].VolumeMounts = append(deployment.Spec.Template.Spec.Containers[0].VolumeMounts, newvlm)
+	deployment.Spec.Template.Spec.Volumes = append(deployment.Spec.Template.Spec.Volumes, newvl)
+
 	if _, err := s.Mid.K8sclient.ClientSet.AppsV1().Deployments(util.ProjectToNS(project)).Create(ctx, deployment, metav1.CreateOptions{}); err != nil {
 		util.Logger.Errorf("exec.CreateDeployment err: %s", err)
 		return err
