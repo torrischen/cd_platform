@@ -90,9 +90,9 @@ type CreateConfigmapArgs struct {
 }
 
 type AddConfigToConfigmapArgs struct {
-	Project     string   `json:"project"`
-	Application string   `json:"application"`
-	Configs     []Config `json:"configs"`
+	Project     string `json:"project"`
+	Application string `json:"application"`
+	Config      Config `json:"config"`
 }
 
 type Config struct {

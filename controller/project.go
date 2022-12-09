@@ -432,7 +432,7 @@ func (ctrl *ProjectController) AddConfigToConfigmap(c *gin.Context) {
 		return
 	}
 
-	err := ctrl.ExecService.AddConfigToConfigmap(c, args.Project, args.Application, args.Configs)
+	err := ctrl.ExecService.AddConfigToConfigmap(c, args.Project, args.Application, args.Config)
 	if err != nil {
 		util.Logger.Errorf("controller.AddConfigToConfigmap err: %s", err)
 		ctrl.Jsonify(c, 400, struct{}{}, err.Error())
