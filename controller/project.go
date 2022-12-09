@@ -166,17 +166,14 @@ func (ctrl *ProjectController) DestroyApplication(c *gin.Context) {
 
 	if err := ctrl.ExecService.DeleteIngressRule(c, args.Project, args.Application); err != nil {
 		util.Logger.Errorf("controller.DestroyApplication DeleteIngressRule err: %s", err)
-		ctrl.Jsonify(c, 400, struct{}{}, err.Error())
 	}
 
 	if err := ctrl.ExecService.DeleteService(c, args.Project, args.Application); err != nil {
 		util.Logger.Errorf("controller.DestroyApplication DeleteService err: %s", err)
-		ctrl.Jsonify(c, 400, struct{}{}, err.Error())
 	}
 
 	if err := ctrl.ExecService.DeleteDeployment(c, args.Project, args.Application); err != nil {
 		util.Logger.Errorf("controller.DestroyApplication DeleteDeployment err: %s", err)
-		ctrl.Jsonify(c, 400, struct{}{}, err.Error())
 	}
 
 	if err := ctrl.ExecService.DeleteConfigmap(c, args.Project, args.Application); err != nil {
