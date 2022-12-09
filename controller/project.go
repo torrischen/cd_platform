@@ -113,12 +113,6 @@ func (ctrl *ProjectController) CreateApplication(c *gin.Context) {
 		return
 	}
 
-	if err := ctrl.ExecService.CreateApplicationConfigmap(c, args.Project, args.DeploymentRaw.Name); err != nil {
-		util.Logger.Errorf("controller.CreateApplication createConfigmap err: %s", err)
-		ctrl.Jsonify(c, 400, struct{}{}, err.Error())
-		return
-	}
-
 	if err := ctrl.ExecService.CreateDeployment(c, args.Project, args.DeploymentRaw); err != nil {
 		util.Logger.Errorf("controller.CreateApplication createDeployment err: %s", err)
 		ctrl.Jsonify(c, 400, struct{}{}, err.Error())
@@ -127,6 +121,12 @@ func (ctrl *ProjectController) CreateApplication(c *gin.Context) {
 
 	if err := ctrl.ExecService.CreateService(c, args.Project, args.ServiceRaw); err != nil {
 		util.Logger.Errorf("controller.CreateApplication createService err: %s", err)
+		ctrl.Jsonify(c, 400, struct{}{}, err.Error())
+		return
+	}
+
+	if err := ctrl.ExecService.CreateApplicationConfigmap(c, args.Project, args.DeploymentRaw.Name); err != nil {
+		util.Logger.Errorf("controller.CreateApplication createConfigmap err: %s", err)
 		ctrl.Jsonify(c, 400, struct{}{}, err.Error())
 		return
 	}
@@ -162,25 +162,21 @@ func (ctrl *ProjectController) DestroyApplication(c *gin.Context) {
 	if err := c.BindJSON(&args); err != nil {
 		util.Logger.Errorf("controller.DestroyProject err: %s", err)
 		ctrl.Jsonify(c, 400, struct{}{}, err.Error())
-		return
 	}
 
 	if err := ctrl.ExecService.DeleteIngressRule(c, args.Project, args.Application); err != nil {
 		util.Logger.Errorf("controller.DestroyApplication DeleteIngressRule err: %s", err)
 		ctrl.Jsonify(c, 400, struct{}{}, err.Error())
-		return
 	}
 
 	if err := ctrl.ExecService.DeleteService(c, args.Project, args.Application); err != nil {
 		util.Logger.Errorf("controller.DestroyApplication DeleteService err: %s", err)
 		ctrl.Jsonify(c, 400, struct{}{}, err.Error())
-		return
 	}
 
 	if err := ctrl.ExecService.DeleteDeployment(c, args.Project, args.Application); err != nil {
 		util.Logger.Errorf("controller.DestroyApplication DeleteDeployment err: %s", err)
 		ctrl.Jsonify(c, 400, struct{}{}, err.Error())
-		return
 	}
 
 	if err := ctrl.ExecService.DeleteConfigmap(c, args.Project, args.Application); err != nil {
