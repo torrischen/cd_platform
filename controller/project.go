@@ -477,8 +477,9 @@ func (ctrl *ProjectController) GetApplicationConfigList(c *gin.Context) {
 func (ctrl *ProjectController) GetApplicationConfigDetail(c *gin.Context) {
 	project := c.Param("project")
 	application := c.Param("application")
+	cmname := c.Param("cmname")
 
-	ret, err := ctrl.WatchService.GetApplicationConfigDetail(c, project, application)
+	ret, err := ctrl.WatchService.GetApplicationConfigDetail(c, project, application, cmname)
 	if err != nil {
 		util.Logger.Errorf("controller.GetApplicationConfigDetail err: %s", err)
 		ctrl.Jsonify(c, 400, struct{}{}, err.Error())

@@ -30,7 +30,7 @@ func InitController() *gin.Engine {
 	pc.GET("/:project/application/:application/envs", projectController.GetApplicationEnvs)
 	pc.POST("/application/env/set", projectController.SetApplicationEnvs)
 	pc.GET("/:project/application/:application/configmap/list", projectController.GetApplicationConfigList)
-	pc.GET("/:project/application/:application/configmap/detail", projectController.GetApplicationConfigDetail)
+	pc.GET("/:project/application/:application/configmap/:cmname/detail", projectController.GetApplicationConfigDetail)
 	pc.POST("/application/configmap/add", projectController.AddConfigToConfigmap)
 	pc.POST("/application/configmap/delete", projectController.DeleteSpecifiedConfig)
 	pc.POST("/application/configmap/update", projectController.UpdateSpecifiedConfig)

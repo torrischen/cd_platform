@@ -23,20 +23,19 @@ func (s *Service) GetApplicationConfigList(ctx context.Context, project string, 
 	}, nil
 }
 
-func (s *Service) GetApplicationConfigDetail(ctx context.Context, project string, application string) ([]*common.ConfigDetail, error) {
+func (s *Service) GetApplicationConfigDetail(ctx context.Context, project string, application string, cmname string) (*common.ConfigDetail, error) {
 	cfm, err := s.Mid.K8sclient.CMLister.ConfigMaps(util.ProjectToNS(project)).Get(application)
 	if err != nil {
 		util.Logger.Errorf("watch.GetApplicationConfigDetail err: %s", err)
 		return nil, err
 	}
 
-	ret := make([]*common.ConfigDetail, 0)
+	ret := &common.ConfigDetail{}
 	for k, v := range cfm.Data {
-		tmp := &common.ConfigDetail{
-			ConfigName:  k,
-			ConfigValue: v,
+		if k == cmname {
+			ret.ConfigName = k
+			ret.ConfigValue = v
 		}
-		ret = append(ret, tmp)
 	}
 
 	return ret, nil

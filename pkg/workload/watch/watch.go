@@ -33,7 +33,7 @@ type WatchService interface {
 	GetDeploymentEnvs(ctx context.Context, project string, application string) ([]corev1.EnvVar, error)
 	GetDeploymentYaml(ctx context.Context, project string, application string) (string, error)
 	GetApplicationConfigList(ctx context.Context, project string, application string) (*common.ConfigList, error)
-	GetApplicationConfigDetail(ctx context.Context, project string, application string) ([]*common.ConfigDetail, error)
+	GetApplicationConfigDetail(ctx context.Context, project string, application string, cmname string) (*common.ConfigDetail, error)
 }
 
 type Service struct {
